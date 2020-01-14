@@ -24,10 +24,12 @@ import com.aliyun.common.utils.MySystemParams;
 import com.aliyun.common.utils.StorageUtils;
 import com.aliyun.svideo.base.widget.ProgressDialog;
 import com.aliyun.svideo.common.utils.PermissionUtils;
+import com.aliyun.svideo.media.MediaInfo;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
-import com.aliyun.svideo.sdk.external.struct.recorder.MediaInfo;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.editor.activity.VideoEditorActivity;
+import com.gotanks.uni_alisv.recorder.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.recorder.bean.AlivcRecordInputParam;
 import com.gotanks.uni_alisv.recorder.mixrecorder.AlivcRecorderFactory;
 import com.gotanks.uni_alisv.recorder.util.Common;
@@ -62,10 +64,10 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * 权限申请
      */
     String[] permission = {
-        Manifest.permission.CAMERA,
-        Manifest.permission.RECORD_AUDIO,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
+            Manifest.permission.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
     private Toast phoningToast;
     private PhoneStateManger phoneStateManger;
@@ -160,7 +162,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
     private void copyAssets() {
         new Handler().postDelayed(() -> copyAssetsTask = new CopyAssetsTask(AlivcSvideoRecordActivity.this).executeOnExecutor(
-            AsyncTask.THREAD_POOL_EXECUTOR), 700);
+                AsyncTask.THREAD_POOL_EXECUTOR), 700);
     }
 
     public static class CopyAssetsTask extends AsyncTask<Void, Void, Void> {
@@ -235,16 +237,16 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         }
         //获取录制输入参数
         mInputParam = new AlivcRecordInputParam.Builder()
-        .setResolutionMode(resolutionMode)
-        .setRatioMode(ratioMode)
-        .setMaxDuration(maxDuration)
-        .setMinDuration(minDuration)
-        .setGop(gop)
-        .setFrame(frame)
-        .setVideoQuality(videoQuality)
-        .setVideoCodec(videoCodec)
-        .setVideoOutputPath(videoOutputPath)
-        .build();
+                .setResolutionMode(resolutionMode)
+                .setRatioMode(ratioMode)
+                .setMaxDuration(maxDuration)
+                .setMinDuration(minDuration)
+                .setGop(gop)
+                .setFrame(frame)
+                .setVideoQuality(videoQuality)
+                .setVideoCodec(videoCodec)
+                .setVideoOutputPath(videoOutputPath)
+                .build();
     }
 
 
@@ -303,16 +305,16 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
             List<MediaInfo> infoList = new ArrayList<>();
             infoList.add(mediaInfo);
             AlivcEditInputParam param = new AlivcEditInputParam.Builder()
-            .setHasTailAnimation(false)
-            .addMediaInfos(infoList)
-            .setCanReplaceMusic(isUseMusic)
-            .setGop(mInputParam.getGop())
-            .setFrameRate(mInputParam.getFrame())
-            .setVideoQuality(mInputParam.getVideoQuality())
-            .setVideoCodec(mInputParam.getVideoCodec())
-            .setRatio(ratio)
-            .build();
-            EditorActivity.startEdit(AlivcSvideoRecordActivity.this, param);
+                    .setHasTailAnimation(false)
+                    .addMediaInfos(infoList)
+                    .setCanReplaceMusic(isUseMusic)
+                    .setGop(mInputParam.getGop())
+                    .setFrameRate(mInputParam.getFrame())
+                    .setVideoQuality(mInputParam.getVideoQuality())
+                    .setVideoCodec(mInputParam.getVideoCodec())
+                    .setRatio(ratio)
+                    .build();
+            VideoEditorActivity.startEdit(AlivcSvideoRecordActivity.this, param);
         });
     }
 
