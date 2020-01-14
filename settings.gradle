@@ -1,0 +1,13 @@
+include ':app', ':uni_alirtc', ':uni_alisv'
+rootProject.name='Viewinter'
+
+include ':AliyunVideoCommon'
+include ':Aliyunplayer:AlivcPlayer'
+include ':AlivcMedia'
+include ':AliyunSVideoBase'
+include ':AliyunFileDownLoader:downloadermanager'
+include ':AliyunSvideoMusic'
+include ':AliyunCrop:pro_crop'
+include ':AliyunEditor:editor_demo'
+include ':AliyunRecorder:record_demo'
+include ':AlivcLittleVideo'

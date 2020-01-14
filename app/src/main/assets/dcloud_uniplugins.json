@@ -1,0 +1,24 @@
+{
+  "nativePlugins": [
+    {
+      "hooksClass": "",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "gotanks-aliRTC",
+          "class": "com.gotanks.uni_alirtc.AliRtcWXModule"
+        }
+      ]
+    },
+    {
+      "hooksClass": "",
+      "plugins": [
+        {
+          "type": "module",
+          "name": "gotanks-aliSV",
+          "class": "com.gotanks.uni_alisv.AliSvWXModule"
+        }
+      ]
+    }
+  ]
+}
