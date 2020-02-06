@@ -42,6 +42,8 @@ repositories {
 dependencies {
     compileOnly fileTree(include: ['*.jar','*.aar'], dir: 'libs')
     compileOnly fileTree(dir: '../app/libs', include: ['uniapp-release.aar'])
+    compileOnly 'com.facebook.fresco:fresco:1.13.0'
+    compileOnly 'com.alibaba:fastjson:1.2.62'
 
     implementation externalAndroidAppCompatV7
     implementation externalAndroidRecyclerView
@@ -49,11 +51,5 @@ dependencies {
 //    compileOnly 'androidx.appcompat:appcompat:1.1.0'
 //    compileOnly "androidx.legacy:legacy-support-v4:1.0.0"
 
-    compileOnly 'com.facebook.fresco:fresco:1.13.0'
-    compileOnly 'com.alibaba:fastjson:1.2.62'
 
-
-//    compileOnly project(':AliyunRecorder:record_demo')
-//    compileOnly project(':AliyunFileDownLoader:downloadermanager')
-    compileOnly project(':AliyunSVideoBase')
 }

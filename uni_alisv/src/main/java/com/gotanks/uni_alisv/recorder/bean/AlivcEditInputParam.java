@@ -4,12 +4,12 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 
 import com.aliyun.common.global.AliyunTag;
-import com.aliyun.svideo.media.MediaInfo;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunVideoParam;
 import com.aliyun.svideo.sdk.external.struct.common.VideoDisplayMode;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.duanqu.transcode.NativeParser;
+import com.gotanks.uni_alisv.media.MediaInfo;
 
 import java.util.ArrayList;
 import java.util.List;

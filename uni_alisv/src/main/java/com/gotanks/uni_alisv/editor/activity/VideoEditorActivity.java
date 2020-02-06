@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
@@ -12,7 +13,6 @@ import android.view.WindowManager;
 
 import com.aliyun.qupai.import_core.AliyunIImport;
 import com.aliyun.qupai.import_core.AliyunImportCreator;
-import com.aliyun.svideo.media.MediaInfo;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunImageClip;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunVideoClip;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunVideoParam;
@@ -21,6 +21,11 @@ import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.R;
 import com.gotanks.uni_alisv.editor.view.AlivcEditView;
+import com.gotanks.uni_alisv.media.MediaInfo;
+import com.gotanks.uni_alisv.net.LittleHttpManager;
+import com.gotanks.uni_alisv.net.data.LittleImageUploadAuthInfo;
+import com.gotanks.uni_alisv.net.data.LittleVideoUploadAuthInfo;
+import com.gotanks.uni_alisv.publish.PublishManager;
 import com.gotanks.uni_alisv.recorder.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.recorder.bean.AlivcEditOutputParam;
 import com.gotanks.uni_alisv.recorder.util.NotchScreenUtil;
@@ -33,6 +38,42 @@ import java.util.List;
  * 编辑并上传；
  */
 public class VideoEditorActivity extends AppCompatActivity {
+    /**
+     * 编辑后的特效配置文件地址，用户合成视频
+     */
+    private String mConfigPath;
+    /**
+     * 封面地址
+     */
+    private String mThumbnailPath;
+    /**
+     * 视频描述
+     */
+    private String mVideoDesc;
+    /**
+            * 视频合成输出文件名称
+     */
+    private String mComposeFileName = "output_compose_video.mp4";
+    /**
+     * 视频合成输出文件路径
+     */
+    private String mComposeOutputPath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/AlivcQuVideo/compose" + "/" + mComposeFileName;
+    /**
+     * 视频上传凭证信息
+     */
+    private LittleVideoUploadAuthInfo mVideoUploadAuthInfo;
+    /**
+     * 图片上传凭证信息
+     */
+    private LittleImageUploadAuthInfo mImageUploadAuthInfo;
+    /**
+     * 视频上传凭证信息获取成功
+     */
+    private boolean isVideoUploadAuthRequestSuccess = false;
+    /**
+     * 图片上传凭证信息获取成功
+     */
+    private boolean isImageUploadAuthRequestSuccess = false;
 
     public static void startEdit(Activity activity, AlivcEditInputParam param) {
         if (param == null || param.getMediaInfos() == null || param.getMediaInfos().size() == 0) {
@@ -54,7 +95,7 @@ public class VideoEditorActivity extends AppCompatActivity {
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_RATION_MODE, param.getRatio());
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_IS_MIX, param.isMixRecorder());
         intent.putParcelableArrayListExtra(AlivcEditInputParam.INTENT_KEY_MEDIA_INFO, param.getMediaInfos());
-        activity.startActivity(intent);
+        activity.startActivityForResult(intent, 1);
     }
 
 
@@ -66,6 +107,10 @@ public class VideoEditorActivity extends AppCompatActivity {
     private AlivcEditInputParam mInputParam;
     private AliyunVideoParam mVideoParam;
 
+    /**
+     * 合成、上传管理类
+     */
+    private PublishManager mPublishManager;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,7 +140,7 @@ public class VideoEditorActivity extends AppCompatActivity {
             public void onComplete(AlivcEditOutputParam outputParam) {
                 //编辑完成跳转到其他界面
 //                Intent intent = new Intent();
-//                intent.setClassName(EditorActivity.this, NEXT_ACTIVITY_CLASS_NAME);
+//                intent.setClassName(this, NEXT_ACTIVITY_CLASS_NAME);
 //                intent.putExtra(PublishActivity.KEY_PARAM_THUMBNAIL, outputParam.getThumbnailPath());
 //                intent.putExtra(PublishActivity.KEY_PARAM_CONFIG, outputParam.getConfigPath());
 //                intent.putExtra(PublishActivity.KEY_PARAM_VIDEO_WIDTH, outputParam.getOutputVideoWidth());
@@ -108,10 +153,152 @@ public class VideoEditorActivity extends AppCompatActivity {
                 Log.d(TAG, "onComplete: " + outputParam.getConfigPath());
                 Log.d(TAG, "onComplete: " + outputParam.getVideoParam());
 
+                mThumbnailPath = outputParam.getThumbnailPath();
+                mVideoDesc = "123123";
+                mConfigPath = outputParam.getConfigPath();
+                if (mPublishManager != null) {
+                    mPublishManager.releaseCompose();
+                }
+                mPublishManager = new PublishManager(VideoEditorActivity.this.getApplicationContext());
                 //TODO 进度条；上传；返回；
+                LittleHttpManager.getInstance().init(VideoEditorActivity.this.getApplicationContext());
+                LittleHttpManager.getInstance().requestImageUploadAuth(
+                        (result, message, data) -> {
+                            if (result) {
+                                isImageUploadAuthRequestSuccess = true;
+                                mImageUploadAuthInfo = data.data;
+                                if (isVideoUploadAuthRequestSuccess) {
+                                    mPublishManager.startComposeAndUpload(
+                                            mConfigPath,
+                                            mComposeOutputPath,
+                                            mVideoUploadAuthInfo.getVideoId(),
+                                            mVideoUploadAuthInfo.getUploadAddress(),
+                                            mVideoUploadAuthInfo.getUploadAuth(),
+                                            mVideoDesc,
+                                            mThumbnailPath,
+                                            mImageUploadAuthInfo.getImageId(),
+                                            mImageUploadAuthInfo.getImageURL(),
+                                            mImageUploadAuthInfo.getUploadAddress(),
+                                            mImageUploadAuthInfo.getUploadAuth(),
+                                            mUploadCallback);
+                                }
+                            }
+                        });
+                LittleHttpManager.getInstance().requestVideoUploadAuth("video", mComposeFileName,
+                        (result, message, data) -> {
+                            if (result) {
+                                isVideoUploadAuthRequestSuccess = true;
+                                mVideoUploadAuthInfo = data.data;
+                                if (isImageUploadAuthRequestSuccess) {
+                                    mPublishManager.startComposeAndUpload(
+                                            mConfigPath,
+                                            mComposeOutputPath,
+                                            mVideoUploadAuthInfo.getVideoId(),
+                                            mVideoUploadAuthInfo.getUploadAddress(),
+                                            mVideoUploadAuthInfo.getUploadAuth(),
+                                            mVideoDesc,
+                                            mThumbnailPath,
+                                            mImageUploadAuthInfo.getImageId(),
+                                            mImageUploadAuthInfo.getImageURL(),
+                                            mImageUploadAuthInfo.getUploadAddress(),
+                                            mImageUploadAuthInfo.getUploadAuth(),
+                                            mUploadCallback);
+                                }
+                            }
+
+                        });
+
             }
         });
     }
+
+    private PublishManager.MyComposeListener mUploadCallback = new PublishManager.MyComposeListener() {
+
+        @Override
+        public void onComposeStart() {
+//            showProgress(mPublishManager.getThumbnail());
+        }
+
+        @Override
+        public void onComposeProgress(int i) {
+//            updateProgress(i / 2);
+        }
+
+        @Override
+        public void onComposeCompleted() {
+
+        }
+
+        @Override
+        public void onComposeError(int i) {
+//            if (mOutOnUploadCompleteListener != null) {
+//                mOutOnUploadCompleteListener.onFailure(i + "", getResources().getString(R.string.alivc_little_main_creation_failed));
+//            }
+        }
+
+        @Override
+        public void onUploadStart() {
+
+        }
+
+        @Override
+        public void onUploadSucceed(String videoId, String imageUrl, String describe) {
+//            if (mOutOnUploadCompleteListener != null) {
+//                mOutOnUploadCompleteListener.onSuccess(videoId, imageUrl, describe);
+//            }
+            if (mPublishManager != null) {
+                mPublishManager.releaseCompose();
+                mPublishManager = null;
+            }
+
+            Log.i(TAG, "videoId"+videoId);
+            Log.i(TAG, "imageUrl"+imageUrl);
+            Log.i(TAG, "describe"+describe);
+            Intent intent = new Intent();
+            intent.putExtra("videoId",videoId);
+            intent.putExtra("imageUrl",imageUrl);
+            intent.putExtra("describe",describe);
+//            intent.setClass(VideoEditorActivity.this, PandoraEntry.class);
+//            startActivity(intent);
+
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+
+        @Override
+        public void onUploadFailed(String code, String message, boolean isImageUpload) {
+//            if (TEIM_STAMP_ERROR.equals(code)) {
+//                if (mOutOnUploadCompleteListener != null) {
+//                    mOutOnUploadCompleteListener.onFailure(code, message);
+//                }
+//                return;
+//            }
+//            showRetryDialog(code, message );
+            if (mPublishManager != null) {
+                mPublishManager.releaseCompose();
+                mPublishManager = null;
+            }
+        }
+
+        @Override
+        public void onUploadProgress(long uploadedSize, long totalSize) {
+            int progress = (int)((uploadedSize * 100) / totalSize) + 50;
+            Log.e("onUploadProgress", "progress" + progress);
+//            updateProgress(progress);
+        }
+
+        @Override
+        public void onUploadAuthExpired(boolean isImageUpload, String videoId) {
+//            if (mAuthInfoExpiredListener != null) {
+//                if (isImageUpload) {
+//                    mAuthInfoExpiredListener.onImageAuthInfoExpired();
+//                } else {
+//                    mAuthInfoExpiredListener.onVideoAuthInfoExpired(videoId);
+//                }
+//            }
+        }
+
+    };
 
     private void initData() {
         Intent intent = getIntent();

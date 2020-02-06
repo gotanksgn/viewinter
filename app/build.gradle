@@ -4,7 +4,7 @@ android {
     compileSdkVersion externalCompileSdkVersion
     buildToolsVersion externalBuildToolsVersion
     defaultConfig {
-        applicationId "com.jagt.viewinter"
+        applicationId "com.jagt.viewinter1"
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
         versionCode 1
