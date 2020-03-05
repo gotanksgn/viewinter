@@ -4,11 +4,11 @@ android {
     compileSdkVersion externalCompileSdkVersion
     buildToolsVersion externalBuildToolsVersion
     defaultConfig {
-        applicationId "com.jagt.viewinter"
+        applicationId "com.jagt.viewinter1"
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 20
+        versionName "0.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {

@@ -80,6 +80,25 @@
     <string name="alivc_record_request_no_permission_content_text">no permission</string>
     <!--end-->
 
+    <!--little video main page-->
+    <string name="alivc_little_main_tip_upload_success">upload success</string>
+    <string name="alivc_little_main_downloading">Downloading</string>
+    <string name="alivc_little_main_dialog_retry">Retry</string>
+    <string name="alivc_little_main_dialog_close">Close</string>
+    <string name="alivc_little_main_creation_failed">Video creation failed</string>
+    <string name="alivc_little_main_dialog_upload_failed">Uploading failed</string>
+    <string name="alivc_little_main_publish">Publishing</string>
+    <string name="alivc_little_main_dialog_content_delete">Are you sure you want to delete the specified video?</string>
+    <string name="alivc_little_main_dialog_setting">Set</string>
+    <string name="alivc_little_main_dialog_not_setting">Cancel</string>
+    <string name="alivc_little_main_dialog_editor">Recorder</string>
+    <string name="alivc_little_main_dialog_recorder">Editor</string>
+    <string name="alivc_little_main_tip_publish_error">Video publishing error,</string>
+    <string name="alivc_little_main_tip_exit">Press once more to exit the application</string>
+    <string name="alivc_little_main_net_error">network error</string>
+    <string name="alivc_little_main_video_upload_error">Uploading failed</string>
+    <string name="alivc_little_main_picture_upload_error">Uploading failed</string>
+
     <string name="alivc_recorder_setting_video_style">拍摄方式</string>
     <string name="alivc_recorder_setting_general_text">普通</string>
     <string name="alivc_recorder_setting_mix_text">合拍</string>

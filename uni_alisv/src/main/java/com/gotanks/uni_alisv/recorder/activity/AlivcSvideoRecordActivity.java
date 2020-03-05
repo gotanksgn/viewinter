@@ -2,7 +2,6 @@ package com.gotanks.uni_alisv.recorder.activity;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -24,11 +23,11 @@ import com.aliyun.common.utils.MySystemParams;
 import com.aliyun.common.utils.StorageUtils;
 import com.aliyun.svideo.base.widget.ProgressDialog;
 import com.aliyun.svideo.common.utils.PermissionUtils;
-import com.aliyun.svideo.media.MediaInfo;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.R;
 import com.gotanks.uni_alisv.editor.activity.VideoEditorActivity;
+import com.gotanks.uni_alisv.media.MediaInfo;
 import com.gotanks.uni_alisv.recorder.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.recorder.bean.AlivcRecordInputParam;
 import com.gotanks.uni_alisv.recorder.mixrecorder.AlivcRecorderFactory;
@@ -359,12 +358,16 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        System.out.println("=======================================");
         if (requestCode == REQUEST_CODE_PLAY) {
             if (resultCode == Activity.RESULT_OK) {
                 videoRecordView.deleteAllPart();
                 finish();
             }
         }
+        System.out.println("====================================================");
+        setResult(RESULT_OK, data);
+        finish();
     }
 
     @Override
@@ -381,7 +384,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * @param context          上下文
      * @param recordInputParam 录制输入参数
      */
-    public static void startRecord(Context context, AlivcRecordInputParam recordInputParam) {
+    public static void startRecord(Activity context, AlivcRecordInputParam recordInputParam) {
         Intent intent = new Intent(context, AlivcSvideoRecordActivity.class);
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, recordInputParam.getResolutionMode());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, recordInputParam.getMaxDuration());
@@ -392,7 +395,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_QUALITY, recordInputParam.getVideoQuality());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_CODEC, recordInputParam.getVideoCodec());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_VIDEO_OUTPUT_PATH, recordInputParam.getVideoOutputPath());
-        context.startActivity(intent);
+        context.startActivityForResult(intent, 1);
     }
 
     public static final int PERMISSION_REQUEST_CODE = 1000;

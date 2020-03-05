@@ -65,7 +65,7 @@ ext {
     externalCompileSdkVersion = 29
     externalBuildToolsVersion = '29.0.2'
     //The MinSdkVersion of the product you can add like this: externalSVideoMinSdkVersion 15
-    externalMinSdkVersion = 17
+    externalMinSdkVersion = 19
     externalPlayerMinSdkVersion = 16
     externalLiveMinSdkVersion = 18
     externalTargetSdkVersion = 29

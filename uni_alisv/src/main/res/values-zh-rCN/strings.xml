@@ -77,6 +77,27 @@
     <string name="alivc_record_request_no_permission_content_text">没有权限</string>
     <!--end-->
 
+    <!--趣视频 主页面-->
+    <string name="alivc_little_main_dialog_editor">视频编辑</string>
+    <string name="alivc_little_main_dialog_recorder">视频录制</string>
+    <string name="alivc_little_main_tip_upload_success">发布成功，已经进入审核通道</string>
+    <string name="alivc_little_main_publish">后台发布中</string>
+    <string name="alivc_little_main_dialog_content_delete">确认删除吗？</string>
+    <string name="alivc_little_main_tip_publish_error">发布失败,</string>
+    <string name="alivc_little_main_dialog_setting">去设置</string>
+    <string name="alivc_little_main_creation_failed">合成失败</string>
+    <string name="alivc_little_main_dialog_upload_failed">上传失败</string>
+    <string name="alivc_little_main_downloading">下载中</string>
+    <string name="alivc_little_main_dialog_retry">重试</string>
+    <string name="alivc_little_main_dialog_close">关闭</string>
+    <string name="alivc_little_main_dialog_not_setting">暂时不设置</string>
+    <string name="alivc_little_main_tip_exit">再按一次退出应用</string>
+    <string name="alivc_little_main_net_error">网络错误</string>
+    <string name="alivc_little_main_video_upload_error">视频上传出错</string>
+    <string name="alivc_little_main_picture_upload_error">图片上传出错</string>
+    <string name="alivc_little_main_not_support_edit">手机版本过低，暂不支持编辑</string>
+    <string name="alivc_little_main_not_support_recorder">手机版本过低，暂不支持录制</string>
+
     <!--编辑页面-->
     <string name="alivc_editor_edit_tip_init_failed">编辑器初始化失败</string>
     <string name="alivc_editor_edit_play_start">播放</string>

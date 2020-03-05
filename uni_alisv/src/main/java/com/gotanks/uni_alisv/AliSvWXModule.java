@@ -19,18 +19,9 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
             AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
             AlivcSvideoRecordActivity.startRecord(activity, recordParam);
 
-//            Toast.makeText(activity, "开始录制视频", Toast.LENGTH_SHORT).show();
-//
-//            Intent intent = new Intent(activity, AliSvActivity.class);
-//            Bundle b = new Bundle();
-//            b.putString("channel", options.getString("username"));
-//            b.putString("username", options.getString("channel"));
-//            JSONObject authInfo = options.getJSONObject("authInfo");
-//            RTCAuthInfo rtcAuthInfo = ParserJsonUtils.parserLoginJson(authInfo);
-//            b.putSerializable("rtcAuthInfo", rtcAuthInfo);
-
-//            intent.putExtras(b);
-//            activity.startActivity(intent);
+            JSONObject result = new JSONObject();
+            result.put("type", "button");
+            jsCallback.invoke(result);
         }
     }
 

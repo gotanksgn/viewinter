@@ -1,2 +1,0 @@
-setCssToHead(["@charset \x22UTF-8\x22;\n.",[1],"login-code { margin: ",[0,100]," ",[0,60],"; }\n",],undefined,{path:"./pages/login/code/code.wxss"})();
-document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/login/code/code.wxml') } }));

@@ -47,10 +47,14 @@ dependencies {
 
     implementation project(':AliyunSVideoBase')
     implementation project(':AliyunVideoCommon')
-    implementation project(':AlivcMedia')
     implementation externalGSON
     implementation externalFaceUnity
     implementation externalAndroidAppCompatV7
     implementation externalAndroidRecyclerView
 
+    implementation externalOKHTTP
+    implementation externalAliyunOSS
+    implementation externalAndroidCardView
+    implementation externalAndroidDesign
+    implementation externalAliyunVodUpload
 }
