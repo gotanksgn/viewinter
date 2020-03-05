@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.aliyun.qupai.import_core.AliyunIImport;
 import com.aliyun.qupai.import_core.AliyunImportCreator;
@@ -152,7 +153,7 @@ public class VideoEditorActivity extends AppCompatActivity {
                 Log.d(TAG, "onComplete: " + outputParam.getThumbnailPath());
                 Log.d(TAG, "onComplete: " + outputParam.getConfigPath());
                 Log.d(TAG, "onComplete: " + outputParam.getVideoParam());
-
+                Toast.makeText(VideoEditorActivity.this, "111", Toast.LENGTH_SHORT).show();
                 mThumbnailPath = outputParam.getThumbnailPath();
                 mVideoDesc = "123123";
                 mConfigPath = outputParam.getConfigPath();
@@ -160,8 +161,10 @@ public class VideoEditorActivity extends AppCompatActivity {
                     mPublishManager.releaseCompose();
                 }
                 mPublishManager = new PublishManager(VideoEditorActivity.this.getApplicationContext());
+                Toast.makeText(VideoEditorActivity.this, "222", Toast.LENGTH_SHORT).show();
                 //TODO 进度条；上传；返回；
                 LittleHttpManager.getInstance().init(VideoEditorActivity.this.getApplicationContext());
+                Toast.makeText(VideoEditorActivity.this, "333", Toast.LENGTH_SHORT).show();
                 LittleHttpManager.getInstance().requestImageUploadAuth(
                         (result, message, data) -> {
                             if (result) {
@@ -184,6 +187,7 @@ public class VideoEditorActivity extends AppCompatActivity {
                                 }
                             }
                         });
+                Toast.makeText(VideoEditorActivity.this, "444", Toast.LENGTH_SHORT).show();
                 LittleHttpManager.getInstance().requestVideoUploadAuth("video", mComposeFileName,
                         (result, message, data) -> {
                             if (result) {
@@ -208,6 +212,7 @@ public class VideoEditorActivity extends AppCompatActivity {
 
                         });
 
+                Toast.makeText(VideoEditorActivity.this, "555", Toast.LENGTH_SHORT).show();
             }
         });
     }
