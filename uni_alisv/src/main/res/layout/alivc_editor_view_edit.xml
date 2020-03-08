@@ -5,43 +5,59 @@
     android:layout_height="match_parent"
     android:background="@color/alivc_common_theme_primary">
 
-    <FrameLayout
-        android:id="@+id/alivc_record_title_view"
+    <LinearLayout
+        android:id="@+id/bar_linear"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/alivc_common_height_tittle_54">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/action_bar"
+            layout="@layout/alivc_editor_include_action_bar_profile"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/alivc_common_height_tittle_64"
+            android:background="@color/alivc_common_theme_primary"
+            android:minHeight="@dimen/alivc_common_height_tittle_64">
+
+            <ImageView
+                android:id="@+id/iv_left"
+                style="?android:attr/actionButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:paddingLeft="@dimen/alivc_common_keyline_tittle_bar_left"
+                android:visibility="gone" />
+
+
+            <TextView
+                android:id="@+id/tv_center"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_centerInParent="true"
+                android:drawablePadding="@dimen/alivc_common_padding_4"
+                android:gravity="center"
+                android:textColor="@color/alivc_common_font_white"
+                android:textSize="@dimen/alivc_common_font_14"
+                android:visibility="gone" />
+
+
+        </RelativeLayout>
+
+
+        <com.gotanks.uni_alisv.editor.editor.thumblinebar.OverlayThumbLineBar
+            android:id="@+id/simplethumblinebar"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="预览"
-            android:textColor="#fff" />
+            android:visibility="gone" />
 
-        <ImageView
-            android:id="@+id/aliyun_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/alivc_common_margin_10"
-            android:padding="@dimen/alivc_common_padding_5"
-            android:src="@mipmap/aliyun_svideo_icon_back" />
-
-        <TextView
-            android:id="@+id/mTvRight"
-            style="@style/NextBtnStyle"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginLeft="@dimen/alivc_common_margin_20"
-            android:layout_marginRight="@dimen/alivc_common_margin_16"
-            android:text="完成" />
-
-    </FrameLayout>
-
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/glsurface_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/alivc_record_title_view">
+        android:layout_height="wrap_content">
 
         <SurfaceView
             android:id="@+id/play_view"
@@ -49,46 +65,108 @@
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal" />
 
-
+        <FrameLayout
+            android:id="@+id/pasterView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
     </FrameLayout>
-
-    <com.gotanks.uni_alisv.editor.view.thumblinebar.ThumbLineBar
-        android:id="@+id/simplethumblinebar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_gravity="bottom" />
-
 
     <TextView
         android:id="@+id/play_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@id/simplethumblinebar"
-        android:layout_centerHorizontal="true"
-        android:layout_gravity="center"
-        android:background="@mipmap/alivc_svideo_bg_record_storp"
+        android:layout_width="@dimen/alivc_svideo_btn_player_width"
+        android:layout_height="@dimen/alivc_svideo_btn_player_height"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="@dimen/alivc_svideo_btn_player_margin_b"
+        android:background="@drawable/alivc_svideo_shap_player_bg"
         android:gravity="center"
+        android:paddingLeft="@dimen/alivc_svideo_btn_radius"
         android:text="@string/alivc_editor_edit_play_pause"
         android:textColor="@color/alivc_common_font_white"
-        android:textSize="@dimen/alivc_common_font_14" />
-
+        android:textSize="@dimen/alivc_common_font_11" />
 
     <TextView
         android:id="@+id/tv_curr_duration"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/alivc_record_title_view"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="5dp"
+        android:layout_above="@id/play_button"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="50dp"
         android:alpha="0.8"
-        android:background="#999"
-        android:paddingLeft="3dp"
-        android:paddingRight="3dp"
+        android:background="@drawable/alivc_svideo_shap_player_bg"
+        android:gravity="right"
+        android:paddingLeft="10dp"
+        android:paddingTop="5dp"
+        android:paddingRight="5dp"
+        android:paddingBottom="5dp"
         android:text="00:00"
         android:textColor="@color/alivc_common_font_white"
-        android:textSize="8sp" />
+        android:textSize="12sp" />
 
+
+    <LinearLayout
+        android:id="@+id/edit_bottom_tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:paddingTop="@dimen/alivc_common_padding_10"
+        android:paddingBottom="@dimen/alivc_common_padding_10">
+
+        <TextView
+            android:id="@+id/tab_filter"
+            style="@style/alivc_svideo_effect_tab"
+            android:drawableTop="@mipmap/aliyun_svideo_filter"
+            android:text="滤镜" />
+
+        <TextView
+            android:id="@+id/tab_effect_filter"
+            style="@style/alivc_svideo_effect_tab"
+            android:layout_height="wrap_content"
+            android:drawableTop="@mipmap/alivc_svideo_effect"
+            android:text="特效" />
+
+        <TextView
+            android:id="@+id/tab_cover"
+            style="@style/alivc_svideo_effect_tab"
+            android:layout_height="wrap_content"
+            android:drawableTop="@mipmap/aliyun_svideo_cover"
+            android:text="封面" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1" />
+
+
+        <TextView
+            android:id="@+id/tv_right"
+            style="@style/NextBtnStyle"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/alivc_common_padding_15"
+            android:layout_marginRight="@dimen/alivc_common_padding_15" />
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:id="@+id/copy_res_tip"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerInParent="true"
+        android:clickable="true">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center" />
+
+        <ProgressBar
+            android:layout_width="@dimen/alivc_common_size_progress_40"
+            android:layout_height="@dimen/alivc_common_size_progress_40"
+            android:layout_gravity="center" />
+    </FrameLayout>
 
     <FrameLayout
         android:id="@+id/transcode_tip"
@@ -115,6 +193,4 @@
             android:max="100"
             android:progress="0" />
     </FrameLayout>
-
-
 </RelativeLayout>

@@ -2,6 +2,34 @@
 
     <style name="AppTheme" parent="Theme.MaterialComponents.Light" />
 
+    <style name="QUDemoFullStyle" parent="@android:style/Theme.NoTitleBar.Fullscreen">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
+    <style name="alivc_svideo_effect_tab">
+        <item name="android:paddingLeft">@dimen/alivc_common_padding_20</item>
+        <item name="android:paddingRight">@dimen/alivc_common_padding_20</item>
+        <item name="android:gravity">center</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:textSize">@dimen/alivc_common_font_11</item>
+        <item name="android:drawablePadding">@dimen/alivc_svideo_tab_tv_iv_distance</item>
+    </style>
+
+    <style name="record_bottom_dialog_animation">
+        <item name="android:windowEnterAnimation">@anim/aliyun_video_anim_trans_from_bottom</item>
+        <item name="android:windowExitAnimation">@anim/aliyun_video_anim_layout_bottom_out</item>
+    </style>
+
+    <style name="QUDemoFullFitStyle" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:backgroundDimEnabled">false</item>
+    </style>
+
     <style name="FullscreenTheme" parent="AppTheme">
         <item name="android:actionBarStyle">@style/FullscreenActionBarStyle</item>
         <item name="android:windowActionBarOverlay">true</item>

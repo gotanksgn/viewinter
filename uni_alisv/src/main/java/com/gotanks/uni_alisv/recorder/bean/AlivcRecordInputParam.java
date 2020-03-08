@@ -37,8 +37,8 @@ public class AlivcRecordInputParam {
     /**
      * 默认配置参数
      */
-    public static final int DEFAULT_VALUE_MAX_DURATION = 15 * 1000;
-    public static final int DEFAULT_VALUE_MIN_DURATION = 2 * 1000;
+    public static final int DEFAULT_VALUE_MAX_DURATION = 60 * 1000;
+    public static final int DEFAULT_VALUE_MIN_DURATION = 10 * 1000;
     public static final int DEFAULT_VALUE_GOP = 250;
     public static final int DEFAULT_VALUE_FRAME = 30;
     public static final String DEFAULT_VALUE_VIDEO_OUTPUT_PATH = Environment.getExternalStorageDirectory()

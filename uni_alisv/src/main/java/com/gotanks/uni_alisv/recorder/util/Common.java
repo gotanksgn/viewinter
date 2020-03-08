@@ -27,11 +27,11 @@ import java.util.zip.ZipInputStream;
 
 
 public class Common {
-    private static  String EFFECT_DIR ;
+    private static String EFFECT_DIR;
     //    public final static String SD_DIR = Environment.getExternalStorageDirectory().getPath()
 //            + "/";
 
-    public static String SD_DIR ;
+    public static String SD_DIR;
     /**
      * 素材分发服务为官方demo演示使用，无法达到商业化使用程度。请自行搭建相关的服务
      */
@@ -43,7 +43,7 @@ public class Common {
     public final static String QU_OVERLAY = "aliyun_svideo_overlay";
     public final static String QU_COLOR_FILTER = "filter";
     public final static String QU_PASTER = "maohuzi";
-    public static String QU_DIR ;
+    public static String QU_DIR;
 
     private final static String MV1_1 = "folder1.1";
     private final static String MV3_4 = "folder3.4";
@@ -51,11 +51,11 @@ public class Common {
     private final static String MV9_16 = "folder9.16";
     private final static String MV16_9 = "folder16.9";
     public static String[] mv_dirs = {
-        MV1_1,
-        MV3_4,
-        MV4_3,
-        MV9_16,
-        MV16_9
+            MV1_1,
+            MV3_4,
+            MV4_3,
+            MV9_16,
+            MV16_9
     };
 
     static private void copyFileToSD(Context cxt, String src, String dst) throws IOException {
@@ -73,6 +73,7 @@ public class Common {
         myInput.close();
         myOutput.close();
     }
+
     static public void copySelf(Context cxt, String root) {
         try {
             String[] files = cxt.getAssets().list(root);
@@ -179,7 +180,170 @@ public class Common {
         inZip.close();
     }
 
+//    private static void insertDB(String name) {
+//        if (name.endsWith(QU_MV)) {
+//            insertMV();
+//        } else if (name.endsWith(QU_CAPTION)) {
+//            insertCaption();
+//        } else if (name.endsWith(QU_OVERLAY)) {
+//            insertOverlay();
+//        } else if (name.endsWith(QU_PASTER)) {
+//            insertPaster();
+//        }
+//    }
 
+
+    //    public static void insertMV() {
+//        File file = new File(EFFECT_DIR, QU_MV);
+//        if (file.exists() && file.isDirectory()) {
+//            String path = "";
+//            File[] files = file.listFiles();
+//            if (files == null) {
+//                return;
+//            }
+//
+//            for (File fs : files) {
+//                if (fs.exists() && fs.isDirectory()) {
+//                    String name = fs.getName();
+//                    File[] filesTemp = fs.listFiles();
+//                    if (filesTemp == null) {
+//                        return;
+//                    }
+//                    int id = 103;
+//                    for (File fileTemp : filesTemp) {
+//                        FileDownloaderModel model = new FileDownloaderModel();
+//                        model.setEffectType(EffectService.EFFECT_MV);
+//                        model.setName(name);
+//                        model.setId(id);
+//                        model.setPath(fs.getAbsolutePath());
+//                        model.setDescription("assets");//用于区分打包还是下载
+//                        if (path == null || "".equals(path)) {
+//                            path = fileTemp.getAbsolutePath() + File.separator + "icon.png";
+//                        }
+//                        model.setPreviewpic(path);
+//                        model.setIcon(path);
+//                        String pathTemp = fileTemp.getAbsolutePath();
+//                        if (pathTemp.endsWith(MV1_1)) {
+//                            model.setAspect(1);
+//                        } else if (pathTemp.endsWith(MV3_4) || pathTemp.endsWith(MV4_3)) {
+//                            model.setAspect(2);
+//                        } else if (pathTemp.endsWith(MV9_16) || pathTemp.endsWith(MV16_9)) {
+//                            model.setAspect(3);
+//                        }
+//                        model.setIsunzip(1);
+//                        model.setTaskId(FileDownloadUtils.generateId(String.valueOf(model.getAspect()), pathTemp));
+//                        HashMap<String, String> hashMap = new HashMap<>();
+//                        hashMap.put(FileDownloaderModel.TASK_ID, String.valueOf(FileDownloadUtils.generateId(String.valueOf(model.getAspect()), pathTemp)));
+//                        hashMap.put(FileDownloaderModel.ID, String.valueOf(model.getId()));
+//                        hashMap.put(FileDownloaderModel.ASPECT, String.valueOf(model.getAspect()));
+//                        DownloaderManager.getInstance().getDbController().insertDb(model, hashMap);
+//                    }
+//                }
+//            }
+//        }
+//    }
+//
+//    public static void insertCaption() {
+//        File file = new File(EFFECT_DIR, QU_CAPTION);
+//        if (file.exists() && file.isDirectory()) {
+//            File[] files = file.listFiles();
+//            if (files == null) {
+//                return;
+//            }
+//            for (File fs : files) {
+//                FileDownloaderModel model = new FileDownloaderModel();
+//                model.setEffectType(EffectService.EFFECT_CAPTION);
+//                model.setId(166);
+//                model.setDescription("assets");//用于区分打包还是下载
+//                model.setIcon(fs.getAbsolutePath() + File.separator + "icon.png");
+//                model.setSubicon(fs.getAbsolutePath() + File.separator + "icon.png");
+//                model.setIsunzip(1);
+//                model.setName(fs.getName());
+//                model.setPath(fs.getAbsolutePath());
+//                model.setUrl(fs.getAbsolutePath());
+//                model.setTaskId(FileDownloadUtils.generateId(String.valueOf(model.getEffectType()), fs.getAbsolutePath()));
+//
+//                HashMap<String, String> hashMap = new HashMap<>();
+//                hashMap.put(FileDownloaderModel.ID, String.valueOf(model.getId()));
+//                hashMap.put(FileDownloaderModel.TASK_ID, String.valueOf(model.getTaskId()));
+//                DownloaderManager.getInstance().getDbController().insertDb(model, hashMap);
+//            }
+//        }
+//    }
+//
+//    private static void insertPaster() {
+//        File file = new File(QU_DIR, QU_PASTER);
+//        if (file.exists() && file.isDirectory()) {
+//            FileDownloaderModel model = new FileDownloaderModel();
+//            model.setId(150);
+//            model.setPath(QU_DIR + QU_PASTER );
+//            //        if(icon == null || "".equals(icon)) {
+//            String icon = model.getPath() + "/icon.png";
+//            //        }
+//            model.setIcon(icon);
+//            model.setName("maohuzi");
+//            model.setIsunzip(0);
+//            model.setEffectType(EffectService.EFFECT_FACE_PASTER);
+//            model.setTaskId(FileDownloadUtils.generateId(String.valueOf(model.getId()), model.getPath()));
+//
+//            HashMap<String, String> hashMap = new HashMap<>();
+//            hashMap.put(FileDownloaderModel.SUBID, String.valueOf(model.getId()));
+//            hashMap.put(FileDownloaderModel.TASK_ID, String.valueOf(model.getTaskId()));
+//            DownloaderManager.getInstance().getDbController().insertDb(model, hashMap);
+//        }
+//    }
+//    public static void insertOverlay() {
+//        File file = new File(EFFECT_DIR, QU_OVERLAY);
+//        JSONSupport jsonSupport = new JSONSupportImpl();
+//        ResourceForm paster = null;
+//        if (file.exists() && file.isDirectory()) {
+//            File[] files = file.listFiles();
+//            for (File fs : files) {
+//                if (fs.exists() && !fs.isDirectory()) {
+//                    try {
+//                        paster = jsonSupport.readValue(fs, ResourceForm.class);
+//                    } catch (Exception e) {
+//                        e.printStackTrace();
+//                    }
+//                }
+//                if (paster != null) {
+//                    List<PasterForm> mPasterlList = paster.getPasterList();
+//                    if (mPasterlList == null) {
+//                        return;
+//                    }
+//                    String icon = "";
+//                    for (PasterForm pasterForm : mPasterlList) {
+//                        FileDownloaderModel model = new FileDownloaderModel();
+//                        model.setId(paster.getId());
+//                        model.setPath(EFFECT_DIR + QU_OVERLAY + File.separator + pasterForm.getName());
+//
+//                        //        if(icon == null || "".equals(icon)) {
+//                        icon = model.getPath() + "/icon.png";
+//                        //        }
+//                        model.setIcon(icon);
+//                        model.setDescription("assets");
+//                        model.setIsnew(paster.getIsNew());
+//                        model.setName(paster.getName());
+//                        model.setLevel(paster.getLevel());
+//                        model.setEffectType(EffectService.EFFECT_PASTER);
+//
+//                        model.setSubid(pasterForm.getId());
+//                        model.setFontid(pasterForm.getFontId());
+//                        model.setSubicon(icon);
+//                        model.setSubname(pasterForm.getName());
+//                        model.setIsunzip(1);
+//
+//                        model.setTaskId(FileDownloadUtils.generateId(String.valueOf(pasterForm.getId()), model.getPath()));
+//
+//                        HashMap<String, String> hashMap = new HashMap<>();
+//                        hashMap.put(FileDownloaderModel.SUBID, String.valueOf(pasterForm.getId()));
+//                        hashMap.put(FileDownloaderModel.TASK_ID, String.valueOf(model.getTaskId()));
+//                        DownloaderManager.getInstance().getDbController().insertDb(model, hashMap);
+//                    }
+//                }
+//            }
+//        }
+//    }
     public static String getMVPath(List<AspectForm> list, int w, int h) {
         String path = null;
         if (list == null || list.size() == 0) {
@@ -188,33 +352,34 @@ public class Common {
         path = calculatePercent(list, w, h);
         return path;
     }
+
     public static String calculatePercent(List<AspectForm> list, int w, int h) {
         int result = 0;
         String path = null;
         if (list == null || list.size() == 0 || h <= 0 || w <= 0) {
             return path;
         }
-        float percent = (float)w / h;
+        float percent = (float) w / h;
         int aspect = 0;
         Map map = new IdentityHashMap();
         for (int i = 0; i < list.size(); i++) {
             aspect = list.get(i).getAspect();
             path = list.get(i).getPath();
             if (aspect == 1 && exits(path + File.separator + MV1_1)) {
-                map.put(new Integer(1), (float)1);
+                map.put(new Integer(1), (float) 1);
             } else if (aspect == 2) {
                 if (exits(path + File.separator + MV3_4)) {
-                    map.put(new Integer(2), (float)3 / 4);
+                    map.put(new Integer(2), (float) 3 / 4);
                 }
                 if (exits(path + File.separator + MV4_3)) {
-                    map.put(new Integer(3), (float)4 / 3);
+                    map.put(new Integer(3), (float) 4 / 3);
                 }
             } else if (aspect == 3) {
                 if (exits(path + File.separator + MV9_16)) {
-                    map.put(new Integer(4), (float)9 / 16);
+                    map.put(new Integer(4), (float) 9 / 16);
                 }
                 if (exits(path + File.separator + MV16_9)) {
-                    map.put(new Integer(5), (float)16 / 9);
+                    map.put(new Integer(5), (float) 16 / 9);
                 }
             }
         }
@@ -224,12 +389,12 @@ public class Common {
         while (iterator.hasNext()) {
             Map.Entry entry = (Map.Entry) iterator.next();
             if (diffNum == -1) {
-                diffNum = Math.abs(percent - (float)entry.getValue());
+                diffNum = Math.abs(percent - (float) entry.getValue());
                 result = (Integer) entry.getKey();
                 continue;
             }
 
-            float diffNumTemp = Math.abs(percent - (float)entry.getValue());
+            float diffNumTemp = Math.abs(percent - (float) entry.getValue());
             if (diffNum >= diffNumTemp) {
                 diffNum = diffNumTemp;
                 result = (Integer) entry.getKey();
@@ -268,6 +433,7 @@ public class Common {
 
     /**
      * 获取滤镜
+     *
      * @return
      */
     public static List<String> getColorFilterList() {

@@ -52,6 +52,7 @@ dependencies {
     implementation externalAndroidAppCompatV7
     implementation externalAndroidRecyclerView
 
+    implementation externalEventBus
     implementation externalOKHTTP
     implementation externalAliyunOSS
     implementation externalAndroidCardView
