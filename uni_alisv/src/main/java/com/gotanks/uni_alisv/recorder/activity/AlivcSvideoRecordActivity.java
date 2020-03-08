@@ -25,14 +25,16 @@ import com.aliyun.svideo.base.widget.ProgressDialog;
 import com.aliyun.svideo.common.utils.PermissionUtils;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
+import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
-import com.gotanks.uni_alisv.editor.activity.VideoEditorActivity;
+import com.gotanks.uni_alisv.editor.activity.EditorActivity;
+import com.gotanks.uni_alisv.editor.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.media.MediaInfo;
-import com.gotanks.uni_alisv.recorder.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.recorder.bean.AlivcRecordInputParam;
 import com.gotanks.uni_alisv.recorder.mixrecorder.AlivcRecorderFactory;
 import com.gotanks.uni_alisv.recorder.util.Common;
 import com.gotanks.uni_alisv.recorder.util.FixedToastUtils;
+import com.gotanks.uni_alisv.recorder.util.NotchScreenUtil;
 import com.gotanks.uni_alisv.recorder.util.voice.PhoneStateManger;
 import com.gotanks.uni_alisv.recorder.view.AliyunSVideoRecordView;
 
@@ -71,10 +73,25 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     private Toast phoningToast;
     private PhoneStateManger phoneStateManger;
 
+    /**
+     * 判断是编辑模块进入还是通过社区模块的编辑功能进入
+     */
+    private static final String INTENT_PARAM_KEY_ENTRANCE = "entrance";
+
+    /**
+     * 判断是否有音乐, 如果有音乐, 编辑界面不能使用音效
+     */
+    private static final String INTENT_PARAM_KEY_HAS_MUSIC = "hasRecordMusic";
+    /**
+     * 判断是编辑模块进入还是通过社区模块的编辑功能进入
+     * svideo: 短视频
+     * community: 社区
+     */
+    private String mRecordEntrance;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         //乐视x820手机在AndroidManifest中设置横竖屏无效，并且只在该activity无效其他activity有效
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         MySystemParams.getInstance().init(this);
@@ -82,22 +99,19 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
         Window window = getWindow();
         // 检测是否是全面屏手机, 如果不是, 设置FullScreen
-//        if (!NotchScreenUtil.checkNotchScreen(this)) {
-//            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-//        }
+        if (!NotchScreenUtil.checkNotchScreen(this)) {
+            window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        }
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         initAssetPath();
 
 
         setContentView(R.layout.alivc_recorder_activity_record);
         getData();
-
-        //权限
         boolean checkResult = PermissionUtils.checkPermissionsGroup(this, permission);
         if (!checkResult) {
             PermissionUtils.requestPermissions(this, permission, PERMISSION_REQUEST_CODE);
         }
-
         videoRecordView = findViewById(R.id.alivc_recordView);
         videoRecordView.setActivity(this);
         if (mInputParam != null) {
@@ -145,7 +159,8 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     }
 
     private void setAssetPath() {
-        String path = StorageUtils.getCacheDirectory(this).getAbsolutePath() + File.separator + Common.QU_NAME + File.separator;
+        String path = StorageUtils.getCacheDirectory(this).getAbsolutePath() + File.separator + Common.QU_NAME
+                + File.separator;
         File filter = new File(new File(path), "filter");
         String[] list = filter.list();
         if (list == null || list.length == 0) {
@@ -160,8 +175,14 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     }
 
     private void copyAssets() {
-        new Handler().postDelayed(() -> copyAssetsTask = new CopyAssetsTask(AlivcSvideoRecordActivity.this).executeOnExecutor(
-                AsyncTask.THREAD_POOL_EXECUTOR), 700);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                copyAssetsTask = new CopyAssetsTask(AlivcSvideoRecordActivity.this).executeOnExecutor(
+                        AsyncTask.THREAD_POOL_EXECUTOR);
+            }
+        }, 700);
+
     }
 
     public static class CopyAssetsTask extends AsyncTask<Void, Void, Void> {
@@ -170,6 +191,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         ProgressDialog progressBar;
 
         CopyAssetsTask(AlivcSvideoRecordActivity activity) {
+
             weakReference = new WeakReference<>(activity);
         }
 
@@ -291,37 +313,45 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         super.onResume();
         videoRecordView.onResume();
         videoRecordView.startPreview();
-        videoRecordView.setBackClickListener(() -> finish());
+        videoRecordView.setBackClickListener(new AliyunSVideoRecordView.OnBackClickListener() {
+            @Override
+            public void onClick() {
+                finish();
+            }
+        });
 
-        videoRecordView.setCompleteListener((path, duration, ratio) -> {
-            // 跳转到下一个页面
-            //切换画幅重新设置视频分辨率宽高
-            MediaInfo mediaInfo = new MediaInfo();
-            mediaInfo.filePath = path;
-            mediaInfo.startTime = 0;
-            mediaInfo.mimeType = "video";
-            mediaInfo.duration = duration;
-            List<MediaInfo> infoList = new ArrayList<>();
-            infoList.add(mediaInfo);
-            AlivcEditInputParam param = new AlivcEditInputParam.Builder()
-                    .setHasTailAnimation(false)
-                    .addMediaInfos(infoList)
-                    .setCanReplaceMusic(isUseMusic)
-                    .setGop(mInputParam.getGop())
-                    .setFrameRate(mInputParam.getFrame())
-                    .setVideoQuality(mInputParam.getVideoQuality())
-                    .setVideoCodec(mInputParam.getVideoCodec())
-                    .setRatio(ratio)
-                    .build();
-            VideoEditorActivity.startEdit(AlivcSvideoRecordActivity.this, param);
+        videoRecordView.setCompleteListener(new AliyunSVideoRecordView.OnFinishListener() {
+            @Override
+            public void onComplete(String path, int duration, int ratio) {
+                // 跳转到下一个页面
+                //切换画幅重新设置视频分辨率宽高
+                MediaInfo mediaInfo = new MediaInfo();
+                mediaInfo.filePath = path;
+                mediaInfo.startTime = 0;
+                mediaInfo.mimeType = "video";
+                mediaInfo.duration = duration;
+                List<MediaInfo> infoList = new ArrayList<>();
+                infoList.add(mediaInfo);
+                AlivcEditInputParam param = new AlivcEditInputParam.Builder()
+                        .setHasTailAnimation(false)
+                        .addMediaInfos(infoList)
+                        .setCanReplaceMusic(isUseMusic)
+                        .setGop(mInputParam.getGop())
+                        .setFrameRate(mInputParam.getFrame())
+                        .setVideoQuality(mInputParam.getVideoQuality())
+                        .setVideoCodec(mInputParam.getVideoCodec())
+                        .setRatio(ratio)
+                        .build();
+                EditorActivity.startEditForResult(AlivcSvideoRecordActivity.this, param);
+            }
         });
     }
 
     @Override
     protected void onPause() {
-        super.onPause();
         videoRecordView.onPause();
         videoRecordView.stopPreview();
+        super.onPause();
         if (phoningToast != null) {
             phoningToast.cancel();
             phoningToast = null;
@@ -336,6 +366,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
             phoneStateManger.unRegistPhoneStateListener();
             phoneStateManger = null;
         }
+
         if (videoRecordView != null) {
             videoRecordView.onStop();
         }
@@ -343,12 +374,13 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         videoRecordView.destroyRecorder();
+        super.onDestroy();
         if (copyAssetsTask != null) {
             copyAssetsTask.cancel(true);
             copyAssetsTask = null;
         }
+
         if (initAssetPath != null) {
             initAssetPath.cancel(true);
             initAssetPath = null;
@@ -358,16 +390,18 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        System.out.println("=======================================");
+        if (requestCode == AliSvWXModule.REQ_CODE) {
+            setResult(resultCode, data);
+            finish();
+            return;
+        }
+
         if (requestCode == REQUEST_CODE_PLAY) {
             if (resultCode == Activity.RESULT_OK) {
                 videoRecordView.deleteAllPart();
                 finish();
             }
         }
-        System.out.println("====================================================");
-        setResult(RESULT_OK, data);
-        finish();
     }
 
     @Override
@@ -384,7 +418,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * @param context          上下文
      * @param recordInputParam 录制输入参数
      */
-    public static void startRecord(Activity context, AlivcRecordInputParam recordInputParam) {
+    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam) {
         Intent intent = new Intent(context, AlivcSvideoRecordActivity.class);
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, recordInputParam.getResolutionMode());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, recordInputParam.getMaxDuration());
@@ -395,7 +429,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_QUALITY, recordInputParam.getVideoQuality());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_CODEC, recordInputParam.getVideoCodec());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_VIDEO_OUTPUT_PATH, recordInputParam.getVideoOutputPath());
-        context.startActivityForResult(intent, 1);
+        context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 
     public static final int PERMISSION_REQUEST_CODE = 1000;

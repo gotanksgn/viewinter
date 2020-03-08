@@ -105,8 +105,8 @@ public class AlivcBeautyFaceSettingView extends FrameLayout {
         rbNormalLevel = findViewById(R.id.rb_level_normal);
         rbHeighLevel = findViewById(R.id.rb_level_advanced);
         // 默认选中高级美颜
-        bottomTabChange(BOTTOM_TAB_INDEX_HEIGH);
-        mDefaultSettingView.setBeautyMode(BeautyMode.Advanced, true);
+        bottomTabChange(BOTTOM_TAB_INDEX_NORMAL);
+        mDefaultSettingView.setBeautyMode(BeautyMode.Normal, true);
 
         mDefaultSettingView.setItemSelectedListener(new OnBeautyFaceItemSeletedListener() {
             @Override

@@ -15,7 +15,15 @@
 
     <application>
         <activity
-            android:name=".editor.activity.VideoEditorActivity"
+            android:name=".publish.CoverEditActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".publish.PublishActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.NoActionBar" />
+        <activity
+            android:name=".editor.activity.EditorActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
         <activity

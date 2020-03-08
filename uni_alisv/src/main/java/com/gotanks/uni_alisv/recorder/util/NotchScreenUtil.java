@@ -55,6 +55,22 @@ public class NotchScreenUtil {
     }
 
     /**
+     * 获取传音CF8手机刘海和虚拟按键的总高度
+     *
+     * @return px
+     */
+    public static int getTECNOCF8NotchAndNaviHeight() {
+
+        int height = 0;
+        if (Build.MODEL.toUpperCase().contains("TECNO CF8")) {
+            //传音技术反馈这款手机的刘海是自定义的，不能通过反射得到高度
+            //只能通过界面自己计算出来刘海和虚拟底部的总高度
+            height = 72;
+        }
+        return height;
+    }
+
+    /**
      * oppo提供: 刘海屏判断.
      *
      * @return true, 刘海屏; false: 非刘海屏
