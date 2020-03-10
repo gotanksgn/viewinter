@@ -26,7 +26,8 @@
 		<feature name="Downloader" value="io.dcloud.net.DownloaderFeatureImpl"/>
 		<feature name="Uploader" value="io.dcloud.net.UploadFeature"/>
 		<feature name="Push" value="io.dcloud.feature.aps.APSFeatureImpl">
-			<module name="igexin" value="io.dcloud.feature.apsGt.GTPushService"/>
+<!--			<module name="igexin" value="io.dcloud.feature.apsGt.GTPushService"/>-->
+			<module name="unipush" value="io.dcloud.feature.unipush.GTPushService"/>
 			<!-- mkeypush -->
 		</feature>
 		<feature name="Zip" value="io.dcloud.feature.pdr.ZipFeature"/>

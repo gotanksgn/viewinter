@@ -7,13 +7,19 @@ android {
         applicationId "com.jagt.viewinter1"
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
-        versionCode 20
-        versionName "0.2.0"
+        versionCode 21
+        versionName "0.2.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
             abiFilters 'armeabi-v7a'
         }
+        manifestPlaceholders = [
+            "plus.unipush.appid" : "YV5OylC9sF8v7ZHzy6Gxl5",
+            "plus.unipush.appsecret": "LWuaqyCxeA8pfJ5dpjK7M3",
+            "plus.unipush.appkey" : "EwDXoWmS4K6Kk3qXDs4bN4",
+            "apk.applicationId":"com.jagt.viewinter1"
+        ]
     }
     buildTypes {
         release {
