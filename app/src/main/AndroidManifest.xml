@@ -81,6 +81,9 @@
                 <data android:scheme="h56131bcf" />
             </intent-filter>
         </activity>
+<!--        <activity-->
+<!--            android:name="com.igexin.sdk.PrivacyActivity"-->
+<!--            android:exported="false"/>-->
     </application>
 
 </manifest>
