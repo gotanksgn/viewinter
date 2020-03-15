@@ -1,0 +1,2 @@
+setCssToHead([".",[1],"yx-button{ width: ",[0,650],"; margin-left: ",[0,50],"; margin-bottom: ",[0,40],"; }\n",],undefined,{path:"./pages/interview/waiting/waiting.wxss"})();
+document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/interview/waiting/waiting.wxml') } }));
