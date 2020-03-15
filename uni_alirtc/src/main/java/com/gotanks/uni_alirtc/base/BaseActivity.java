@@ -30,6 +30,10 @@ public class BaseActivity extends AppCompatActivity {
         }, 1000);
     }
 
+    public void showToast(String msg) {
+        Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_LONG).show();
+    }
+
     private PermissionUtils.PermissionGrant mGrant = new PermissionUtils.PermissionGrant() {
         @Override
         public void onPermissionGranted(int requestCode) {
