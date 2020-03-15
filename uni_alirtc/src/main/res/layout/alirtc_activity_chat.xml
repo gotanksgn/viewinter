@@ -70,7 +70,7 @@
             android:background="@drawable/alirtc_video_call_handsfree_shape"
             android:gravity="center"
             android:text="@string/alirtc_join_channel"
-            android:textColor="@android:color/black"
+            android:textColor="#ffffff"
             android:textSize="@dimen/labels_text_size" />
 
     </FrameLayout>
