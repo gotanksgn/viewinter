@@ -1,15 +1,11 @@
 apply plugin: 'com.android.library'
 
 android {
-//    compileSdkVersion 29
-//    buildToolsVersion "29.0.2"
     compileSdkVersion externalCompileSdkVersion
     buildToolsVersion externalBuildToolsVersion
 
 
     defaultConfig {
-//        minSdkVersion 16
-//        targetSdkVersion 29
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
         versionCode 1
@@ -47,13 +43,13 @@ dependencies {
 
     implementation project(':AliyunSVideoBase')
     implementation project(':AliyunVideoCommon')
-    implementation externalGSON
+    compileOnly externalGSON
     implementation externalFaceUnity
-    implementation externalAndroidAppCompatV7
-    implementation externalAndroidRecyclerView
+    compileOnly externalAndroidAppCompatV7
+    compileOnly externalAndroidRecyclerView
 
     implementation externalEventBus
-    implementation externalOKHTTP
+    compileOnly externalOKHTTP
     implementation externalAliyunOSS
     implementation externalAndroidCardView
     implementation externalAndroidDesign
