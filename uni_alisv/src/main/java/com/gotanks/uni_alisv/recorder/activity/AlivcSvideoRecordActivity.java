@@ -21,15 +21,17 @@ import android.widget.Toast;
 
 import com.aliyun.common.utils.MySystemParams;
 import com.aliyun.common.utils.StorageUtils;
+import com.aliyun.svideo.base.MediaInfo;
 import com.aliyun.svideo.base.widget.ProgressDialog;
 import com.aliyun.svideo.common.utils.PermissionUtils;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.common.LittleVideoParamConfig;
 import com.gotanks.uni_alisv.editor.activity.EditorActivity;
+import com.gotanks.uni_alisv.editor.activity.EditorMediaActivity;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditInputParam;
-import com.gotanks.uni_alisv.media.MediaInfo;
 import com.gotanks.uni_alisv.recorder.bean.AlivcRecordInputParam;
 import com.gotanks.uni_alisv.recorder.mixrecorder.AlivcRecorderFactory;
 import com.gotanks.uni_alisv.recorder.util.Common;
@@ -313,10 +315,15 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         super.onResume();
         videoRecordView.onResume();
         videoRecordView.startPreview();
-        videoRecordView.setBackClickListener(new AliyunSVideoRecordView.OnBackClickListener() {
+        videoRecordView.setBackClickListener(new AliyunSVideoRecordView.OnActionClickListener() {
             @Override
-            public void onClick() {
+            public void onClickBack() {
                 finish();
+            }
+
+            @Override
+            public void onClickImport() {
+                startImport();
             }
         });
 
@@ -390,7 +397,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AliSvWXModule.REQ_CODE) {
+        if (requestCode == AliSvWXModule.REQ_CODE && resultCode == RESULT_OK) {
             setResult(resultCode, data);
             finish();
             return;
@@ -491,5 +498,16 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         if (null != openAppDetDialog && !openAppDetDialog.isShowing()) {
             openAppDetDialog.show();
         }
+    }
+
+    public void startImport() {
+        AlivcEditInputParam param = new AlivcEditInputParam.Builder()
+                .setRatio(LittleVideoParamConfig.Editor.VIDEO_RATIO)
+                .setScaleMode(LittleVideoParamConfig.Editor.VIDEO_SCALE)
+                .setVideoQuality(LittleVideoParamConfig.Editor.VIDEO_QUALITY)
+                .setFrameRate(LittleVideoParamConfig.Editor.VIDEO_FRAMERATE)
+                .setGop(LittleVideoParamConfig.Editor.VIDEO_GOP)
+                .build();
+        EditorMediaActivity.startImportForResult(AlivcSvideoRecordActivity.this, param);
     }
 }

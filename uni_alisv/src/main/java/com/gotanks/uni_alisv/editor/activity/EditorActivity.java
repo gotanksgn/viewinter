@@ -25,7 +25,7 @@ import com.gotanks.uni_alisv.R;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditOutputParam;
 import com.gotanks.uni_alisv.editor.view.AlivcEditView;
-import com.gotanks.uni_alisv.media.MediaInfo;
+import com.aliyun.svideo.base.MediaInfo;
 import com.gotanks.uni_alisv.publish.PublishActivity;
 import com.gotanks.uni_alisv.recorder.util.NotchScreenUtil;
 

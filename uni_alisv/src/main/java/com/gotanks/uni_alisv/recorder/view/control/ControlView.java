@@ -45,6 +45,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     private TextView aliyunRecordDuration;
     private View vIvToggleRateBar;
     private FrameLayout aliyunRecordBtn;
+    private View vStartImport;
     private TextView aliyunDelete;
     //    private LinearLayout mAlivcMusic;
     private TextView mRecordTipTV;
@@ -134,6 +135,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
         aliyunRecordBtn = (FrameLayout) findViewById(R.id.aliyun_record_bg);
         aliyunDelete = (TextView) findViewById(R.id.aliyun_delete);
         llBeautyFace = findViewById(R.id.ll_beauty_face);
+        vStartImport = findViewById(R.id.vStartImport);
 //        llGifEffect = findViewById(R.id.ll_gif_effect);
 //        mPickerView = findViewById(R.id.alivc_video_picker_view);
         mTitleView = findViewById(R.id.alivc_record_title_view);
@@ -191,6 +193,19 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
      * 给各个view设置监听
      */
     private void setViewListener() {
+
+        vStartImport.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                if (FastClickUtil.isFastClick()) {
+                    return;
+                }
+                if (mListener != null) {
+                    mListener.onImportClick();
+                }
+            }
+        });
 
         vIvToggleRateBar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -381,7 +396,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
         // 点击音乐
 //        mAlivcMusic.setOnClickListener(new OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickBack(View v) {
 //                if (FastClickUtil.isFastClick()) {
 //                    return;
 //                }
@@ -402,7 +417,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
         // 点击动图
 //        llGifEffect.setOnClickListener(new OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickBack(View v) {
 //                if (FastClickUtil.isFastClick()) {
 //                    return;
 //                }
@@ -424,7 +439,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
         });
 //        mAlivcAspectRatio.setOnClickListener(new OnClickListener() {
 //            @Override
-//            public void onClick(View v) {
+//            public void onClickBack(View v) {
 //                if (FastClickUtil.isFastClick()) {
 //                    return;
 //                }
@@ -641,6 +656,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
             updateRateItemView();
             updateRecordBtnView();
             updateDeleteView();
+            updateImportView();
             if (recordState == RecordState.STOP) {
                 //其他按钮现实
                 llBeautyFace.setVisibility(VISIBLE);
@@ -649,6 +665,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
 //                llGifEffect.setVisibility(INVISIBLE);
                 llBeautyFace.setVisibility(INVISIBLE);
             }
+
         }
 
     }
@@ -863,6 +880,15 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
 //        updateModeSelView();
         updateDeleteView();
         updateMusicSelView();
+        updateImportView();
+    }
+
+    private void updateImportView() {
+        if (hasRecordPiece || recordState != RecordState.STOP) {
+            vStartImport.setVisibility(GONE);
+        } else {
+            vStartImport.setVisibility(VISIBLE);
+        }
     }
 
     /**

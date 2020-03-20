@@ -3,4 +3,6 @@
     <item name="timeline_overlay_tail" type="id"/>
     <item name="timeline_overlay_head" type="id"/>
     <item name="timeline_overlay_middle" type="id"/>
+    <item name="tag_first" type="id"/>
+
 </resources>

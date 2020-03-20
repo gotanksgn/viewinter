@@ -13,6 +13,12 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
 
     public static final int REQ_CODE = 8888;
 
+    /**
+     * 最短 和 最长
+     */
+    public static final int MIN_TIME = 10 * 1000;
+    public static final int MAX_TIME = 60 * 1000;
+
     @JSMethod(uiThread = true)
     public void show(JSONObject options, JSCallback jsCallback) {
 
@@ -20,7 +26,6 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
             Activity activity = (Activity) mWXSDKInstance.getContext();
             AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
             AlivcSvideoRecordActivity.startRecordForResult(activity, recordParam);
-
             JSONObject result = new JSONObject();
             result.put("type", "button");
             jsCallback.invoke(result);

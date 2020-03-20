@@ -1,8 +1,14 @@
 package com.aliyun.svideo.base;
 
+import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
+import android.util.Log;
+
+import com.aliyun.svideo.common.utils.ThreadUtils;
 
 import java.io.File;
+
 
 /**
  * @author cross_ly DATE 2019/04/23
@@ -15,11 +21,15 @@ public class Constants {
      */
     public static class SDCardConstants {
 
+        private static final String TAG = "SDCardConstants";
+
+
         /**
          * 裁剪 & 录制 & 转码输出文件的目录
          * "/sdcard/DCIM/Camera/"
          */
         public final static String OUTPUT_PATH_DIR = Environment.getExternalStorageDirectory() + File.separator + "DCIM" + File.separator + "Camera" + File.separator;
+
 
         /**
          * 转码文件后缀
@@ -43,6 +53,76 @@ public class Constants {
                 //noinspection ResultOfMethodCallIgnored
                 dir.mkdirs();
             }
+        }
+
+        /**
+         * 裁剪 & 录制 & 转码输出文件的目录
+         * android Q 版本默认路径
+         * /storage/emulated/0/Android/data/包名/files/Media/
+         * android Q 以下版本默认"/sdcard/DCIM/Camera/"
+         */
+        public static String getDir(Context context) {
+            String dir;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                dir = context.getExternalFilesDir("") + File.separator + "Media" + File.separator;
+            } else {
+                dir = Environment.getExternalStorageDirectory() + File.separator + "DCIM"
+                      + File.separator + "Camera" + File.separator;
+            }
+            File file = new File(dir);
+            if (!file.exists()) {
+                //noinspection ResultOfMethodCallIgnored
+                file.mkdirs();
+            }
+            return dir;
+        }
+
+        /**
+         * 获取外部缓存目录 版本默认"/storage/emulated/0/Android/data/包名/file/Cache"
+         *
+         * @param context Context
+         * @return string path
+         */
+        public static String getCacheDir(Context context) {
+            File cacheDir = context.getExternalCacheDir();
+            return cacheDir == null ? "" : cacheDir.getPath();
+        }
+
+        /**
+         * 清空外部缓存目录文件 "/storage/emulated/0/Android/data/包名/file/Cache"
+         *
+         * @param context Context
+         */
+        public static void clearCacheDir(Context context) {
+            final File cacheDir = context.getExternalCacheDir();
+            ThreadUtils.runOnSubThread(new Runnable() {
+                @Override
+                public void run() {
+                    boolean b = deleteFile(cacheDir);
+                    Log.i(TAG, "delete cache file " + b);
+                }
+            });
+        }
+
+        /**
+         * 递归删除文件/目录
+         * @param file File
+         */
+        private static boolean deleteFile(File file) {
+            if (file == null || !file.exists()) {
+                return true;
+            }
+
+            if (file.isDirectory()) {
+                File[] files = file.listFiles();
+                if (files == null) {
+                    return true;
+                }
+                for (File f : files) {
+                    deleteFile(f);
+                }
+            }
+            return file.delete();
         }
 
     }

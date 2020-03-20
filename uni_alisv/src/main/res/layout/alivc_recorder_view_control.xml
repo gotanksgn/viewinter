@@ -372,6 +372,13 @@
 
             </FrameLayout>
 
+            <TextView
+                android:id="@+id/vStartImport"
+                style="@style/NextBtnStyle"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/aliyun_record_bg"
+                android:text="选择相册"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/aliyun_complete"

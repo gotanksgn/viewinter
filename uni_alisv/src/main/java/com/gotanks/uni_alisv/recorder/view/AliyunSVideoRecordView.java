@@ -533,7 +533,7 @@ public class AliyunSVideoRecordView extends FrameLayout
             @Override
             public void onBackClick() {
                 if (mBackClickListener != null) {
-                    mBackClickListener.onClick();
+                    mBackClickListener.onClickBack();
                 }
             }
 
@@ -704,6 +704,13 @@ public class AliyunSVideoRecordView extends FrameLayout
             public void onChangeAspectRatioClick(int ratio) {
                 //重新绘制界面
                 setReSizeRatioMode(ratio);
+            }
+
+            @Override
+            public void onImportClick() {
+                if (mBackClickListener != null) {
+                    mBackClickListener.onClickImport();
+                }
             }
         });
         mControlView.setRecordType(recorder.isMixRecorder());
@@ -1678,9 +1685,9 @@ public class AliyunSVideoRecordView extends FrameLayout
     /**
      * 录制界面返回按钮click listener
      */
-    private OnBackClickListener mBackClickListener;
+    private OnActionClickListener mBackClickListener;
 
-    public void setBackClickListener(OnBackClickListener listener) {
+    public void setBackClickListener(OnActionClickListener listener) {
         this.mBackClickListener = listener;
     }
 
@@ -1754,8 +1761,10 @@ public class AliyunSVideoRecordView extends FrameLayout
     /**
      * 返回按钮事件监听
      */
-    public interface OnBackClickListener {
-        void onClick();
+    public interface OnActionClickListener {
+        void onClickBack();
+
+        void onClickImport();
     }
 
     /**

@@ -468,6 +468,8 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     }
 
 
+    private volatile boolean isPublishing = false;
+
     private void startUploadVideo() {
         if (mThumbnailPath != null) {
             imageSize = new File(mThumbnailPath).length();
@@ -475,20 +477,39 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         if (mComposeOutputPath != null) {
             videoSize = new File(mComposeOutputPath).length();
         }
+        isPublishing = true;
         startImageUpload();
+    }
+
+    private void cancelUpload() {
+        isPublishing = false;
+        if (mComposeClient != null) {
+            mComposeClient.cancelUpload();
+        }
+        ToastUtil.showToast(this, "已取消");
+        mPublish.setEnabled(true);
     }
 
     private ProgressDialog progressDialog = null;
 
-    private void showUploadProgress(int progress) {
+    private void showUploadProgress(int progress, boolean cancelAble) {
         if (progressDialog == null) {
-            progressDialog = ProgressDialog.show(this, "正在发布", "正在发布", true);
-            progressDialog.setCancelable(false);
-            progressDialog.setCanceledOnTouchOutside(false);
+            progressDialog = ProgressDialog.show(this, "正在发布", "正在发布", true, false, new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                    //取消发布
+                    Log.d(TAG, "onCancel: 取消发布");
+                    cancelUpload();
+                }
+            });
             progressDialog.setMax(100);
         }
         progressDialog.setProgress(progress);
+        if (!progressDialog.isShowing()) {
+            progressDialog.show();
+        }
     }
+
 
     private void hideUploadProgress() {
         if (progressDialog != null) {
@@ -505,7 +526,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
      * 上传图片
      */
     private void startImageUpload() {
-        showUploadProgress(0);
+        showUploadProgress(0, false);
         Log.e(TAG, "startImageUpload");
         RequestParams params = new RequestParams();
         params.addFormDataPart("imageType", "cover");
@@ -514,6 +535,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
                     @Override
                     protected void onSuccess(String s) {
                         super.onSuccess(s);
+                        if (!isPublishing) {
+                            Log.w(TAG, "onSuccess: 已取消上传");
+                            return;
+                        }
                         Log.d(AliyunTag.TAG, s);
                         vodImageUploadAuth = VodImageUploadAuth.getImageTokenInfo(s);
                         if (vodImageUploadAuth != null && mComposeClient != null) {
@@ -548,6 +573,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
                     @Override
                     public void onFailure(int errorCode, String msg) {
                         super.onFailure(errorCode, msg);
+                        if (!isPublishing) {
+                            Log.w(TAG, "onSuccess: 已取消上传");
+                            return;
+                        }
                         Log.e(AliyunTag.TAG, "Get image upload auth info failed, errorCode:" + errorCode + ", msg:" + msg);
                         ThreadUtils.runOnUiThread(new Runnable() {
                             @Override
@@ -572,6 +601,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
             @Override
             protected void onSuccess(String s) {
                 super.onSuccess(s);
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
+                }
                 vodVideoUploadAuth = VodVideoUploadAuth.getVideoTokenInfo(s);
                 if (vodVideoUploadAuth != null && mComposeClient != null) {
                     int rv = mComposeClient.uploadVideoWithVod(mComposeOutputPath, vodVideoUploadAuth.getUploadAddress(), vodVideoUploadAuth.getUploadAuth(), mUploadCallback);
@@ -605,6 +638,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
             @Override
             public void onFailure(int errorCode, String msg) {
                 super.onFailure(errorCode, msg);
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
+                }
                 Log.e(AliyunTag.TAG, "Get video upload auth failed, errorCode:" + errorCode + ", msg:" + msg);
                 ThreadUtils.runOnUiThread(new Runnable() {
                     @Override
@@ -622,7 +659,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onUploadSucceed() {
-
+            if (!isPublishing) {
+                Log.w(TAG, "onSuccess: 已取消上传");
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -648,6 +688,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         @Override
         public void onUploadFailed(String code, String message) {
             Log.e(AliyunTag.TAG, "onUploadFailed, errorCode:" + code + ", msg:" + message);
+            if (!isPublishing) {
+                Log.w(TAG, "onSuccess: 已取消上传");
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -660,6 +704,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onUploadProgress(final long uploadedSize, final long totalSize) {
+            if (!isPublishing) {
+                Log.w(TAG, "onSuccess: 已取消上传");
+                return;
+            }
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
@@ -672,7 +720,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
                     } else if (mComposeClient.getState() == AliyunVodCompose.AliyunComposeState.STATE_VIDEO_UPLOADING) {
                         progress = (int) (((uploadedSize + imageSize) * 100) / (totalSize + imageSize));
                     }
-                    showUploadProgress(progress);
+                    showUploadProgress(progress, true);
                 }
             });
 
@@ -690,6 +738,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
 
         @Override
         public void onUploadTokenExpired() {
+            if (!isPublishing) {
+                Log.w(TAG, "onSuccess: 已取消上传");
+                return;
+            }
             if (mComposeClient == null) {
                 return;
             }
@@ -707,12 +759,19 @@ public class PublishActivity extends Activity implements View.OnClickListener {
      * @param videoId
      */
     private void refreshVideoUpload(String videoId) {
+
         RequestParams params = new RequestParams();
         params.addFormDataPart("videoId", videoId);
         HttpRequest.get(AlivcLittleServerApiConstants.URL_REFRESH_VIDEO_UPLOAD_AUTH, params, new StringHttpRequestCallback() {
             @Override
             protected void onSuccess(String s) {
                 super.onSuccess(s);
+
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
+                }
+
                 RefreshVodVideoUploadAuth tokenInfo = RefreshVodVideoUploadAuth.getReVideoTokenInfo(s);
                 if (tokenInfo != null && mComposeClient != null) {
                     int rv = mComposeClient.refreshWithUploadAuth(tokenInfo.getUploadAuth());
