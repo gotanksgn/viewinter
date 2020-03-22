@@ -11,7 +11,7 @@ public class AlivcLittleServerApiConstants {
     /**
      * base url
      */
-    public static final String BASE_URL = "http://39.105.155.153:9090/employ-aliyun-video-server";
+    public static final String BASE_URL = "https://mianshipower.com:9090/employ-aliyun-video-server";
 
     /**
      * 视频封面图片地址的base url

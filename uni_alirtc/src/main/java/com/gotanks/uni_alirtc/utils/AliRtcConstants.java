@@ -10,7 +10,7 @@ public class AliRtcConstants {
     /**
      * 获取加入房间信息的url，用户自定义
      */
-    public static final String GSLB_TEST = "http://39.105.155.153:9090/employ-aliyun-video-server/api/aliyun/auth/token";
+    public static final String GSLB_TEST = "https://mianshipower.com:9090/employ-aliyun-video-server/api/aliyun/auth/token";
 
     /**
      * 需要特殊处理的错误码，信令错误与心跳超时
