@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/gallery_actionBar"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/alivc_common_theme_primary">
+
+        <ImageButton
+            android:id="@+id/gallery_closeBtn"
+            style="?android:attr/actionButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left|center_vertical"
+            android:contentDescription="@null"
+            android:src="@drawable/alivc_media_icon_back" />
+
+        <LinearLayout
+            android:id="@+id/topPanel"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/gallery_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/alivc_common_font_white"
+                android:textSize="@dimen/alivc_common_font_18" />
+
+            <ImageView
+                android:id="@+id/gallery_drawer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/alivc_common_margin_4"
+                android:src="@drawable/aliyun_media_gallery_drowdown_selector" />
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_next_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="right|center_vertical"
+            android:layout_marginRight="@dimen/alivc_common_margin_8"
+            android:background="@drawable/aliyun_media_shape_next_button"
+            android:enabled="false"
+            android:minWidth="0dp"
+            android:minHeight="0dp"
+            android:paddingLeft="@dimen/alivc_common_padding_8"
+            android:paddingTop="@dimen/alivc_common_padding_4"
+            android:paddingRight="@dimen/alivc_common_padding_8"
+            android:paddingBottom="@dimen/alivc_common_padding_4"
+            android:text="确定选择"
+            android:textColor="@color/alivc_common_font_white"
+            android:textSize="@dimen/alivc_common_font_12" />
+
+
+    </FrameLayout>
+
+
+    <FrameLayout
+        android:id="@+id/gallery_container"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/alivc_common_theme_primary">
+        <!--底部空出tab的高度-->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/gallery_media"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_select"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/alivc_common_height_group_150"
+        android:layout_gravity="bottom"
+        android:background="@color/alivc_common_theme_primary"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/tv_duration_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/alivc_common_margin_8"
+            android:layout_marginTop="@dimen/alivc_common_margin_8"
+            android:text="视频时长："
+            android:textColor="@color/alivc_media_font_total_duration_title"
+            android:textSize="@dimen/alivc_common_font_12" />
+
+        <TextView
+            android:id="@+id/tv_duration_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/alivc_common_margin_2"
+            android:layout_marginTop="@dimen/alivc_common_margin_8"
+            android:layout_toRightOf="@id/tv_duration_title"
+            android:textColor="@color/selector_video_duration"
+            android:textSize="@dimen/alivc_common_font_12" />
+
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_selected_video"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_duration_title"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/alivc_common_margin_8"
+            android:layout_marginTop="@dimen/alivc_common_margin_15"
+            android:layout_marginBottom="@dimen/alivc_common_margin_8" />
+
+    </RelativeLayout>
+
+</LinearLayout>

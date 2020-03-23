@@ -131,7 +131,8 @@
             style="@style/alivc_svideo_effect_tab"
             android:layout_height="wrap_content"
             android:drawableTop="@mipmap/aliyun_svideo_cover"
-            android:text="封面" />
+            android:text="封面"
+            android:visibility="gone" />
 
         <View
             android:layout_width="0dp"

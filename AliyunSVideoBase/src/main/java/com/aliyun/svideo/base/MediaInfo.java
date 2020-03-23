@@ -2,7 +2,7 @@
  * Copyright (C) 2010-2017 Alibaba Group Holding Limited.
  */
 
-package com.gotanks.uni_alisv.media;
+package com.aliyun.svideo.base;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -10,7 +10,9 @@ import android.os.Parcelable;
 public class MediaInfo implements Parcelable {
 
     public String filePath;
+    public String fileUri;
     public String thumbnailPath;
+    public String thumbnailUri;
     public String mimeType;
     public String title;
     public long startTime;

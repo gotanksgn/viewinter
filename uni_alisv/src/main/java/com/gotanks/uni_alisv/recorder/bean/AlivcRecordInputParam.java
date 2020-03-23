@@ -5,6 +5,7 @@ import android.os.Environment;
 import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.aliyun.svideo.sdk.external.struct.snap.AliyunSnapVideoParam;
+import com.gotanks.uni_alisv.AliSvWXModule;
 
 import java.io.File;
 
@@ -37,8 +38,8 @@ public class AlivcRecordInputParam {
     /**
      * 默认配置参数
      */
-    public static final int DEFAULT_VALUE_MAX_DURATION = 60 * 1000;
-    public static final int DEFAULT_VALUE_MIN_DURATION = 10 * 1000;
+    public static final int DEFAULT_VALUE_MAX_DURATION = AliSvWXModule.MAX_TIME;
+    public static final int DEFAULT_VALUE_MIN_DURATION = AliSvWXModule.MIN_TIME;
     public static final int DEFAULT_VALUE_GOP = 250;
     public static final int DEFAULT_VALUE_FRAME = 30;
     public static final String DEFAULT_VALUE_VIDEO_OUTPUT_PATH = Environment.getExternalStorageDirectory()
@@ -98,51 +99,55 @@ public class AlivcRecordInputParam {
         this.mVideoCodec = VideoCodecs.H264_HARDWARE;
         this.mVideoOutputPath = DEFAULT_VALUE_VIDEO_OUTPUT_PATH;
     }
+
     /**
      * 获取拍摄视频宽度
+     *
      * @return
      */
     public int getVideoWidth() {
         int width = 0;
         switch (mResolutionMode) {
-        case AliyunSnapVideoParam.RESOLUTION_360P:
-            width = 360;
-            break;
-        case AliyunSnapVideoParam.RESOLUTION_480P:
-            width = 480;
-            break;
-        case AliyunSnapVideoParam.RESOLUTION_540P:
-            width = 540;
-            break;
-        case AliyunSnapVideoParam.RESOLUTION_720P:
-            width = 720;
-            break;
-        default:
-            width = 540;
-            break;
+            case AliyunSnapVideoParam.RESOLUTION_360P:
+                width = 360;
+                break;
+            case AliyunSnapVideoParam.RESOLUTION_480P:
+                width = 480;
+                break;
+            case AliyunSnapVideoParam.RESOLUTION_540P:
+                width = 540;
+                break;
+            case AliyunSnapVideoParam.RESOLUTION_720P:
+                width = 720;
+                break;
+            default:
+                width = 540;
+                break;
         }
 
         return width;
     }
+
     public int getVideoHeight() {
         int width = getVideoWidth();
         int height = 0;
         switch (mRatioMode) {
-        case AliyunSnapVideoParam.RATIO_MODE_1_1:
-            height = width;
-            break;
-        case AliyunSnapVideoParam.RATIO_MODE_3_4:
-            height = width * 4 / 3;
-            break;
-        case AliyunSnapVideoParam.RATIO_MODE_9_16:
-            height = width * 16 / 9;
-            break;
-        default:
-            height = width;
-            break;
+            case AliyunSnapVideoParam.RATIO_MODE_1_1:
+                height = width;
+                break;
+            case AliyunSnapVideoParam.RATIO_MODE_3_4:
+                height = width * 4 / 3;
+                break;
+            case AliyunSnapVideoParam.RATIO_MODE_9_16:
+                height = width * 16 / 9;
+                break;
+            default:
+                height = width;
+                break;
         }
         return height;
     }
+
     public void setResolutionMode(int mResolutionMode) {
         this.mResolutionMode = mResolutionMode;
     }
@@ -217,6 +222,7 @@ public class AlivcRecordInputParam {
 
     public static class Builder {
         private AlivcRecordInputParam mParam = new AlivcRecordInputParam();
+
         public Builder setResolutionMode(int mResolutionMode) {
             this.mParam.mResolutionMode = mResolutionMode;
             return this;
@@ -261,6 +267,7 @@ public class AlivcRecordInputParam {
             this.mParam.mVideoOutputPath = videoOutputPath;
             return this;
         }
+
         public AlivcRecordInputParam build() {
             return this.mParam;
         }

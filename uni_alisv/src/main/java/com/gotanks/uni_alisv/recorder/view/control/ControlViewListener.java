@@ -76,4 +76,6 @@ public interface ControlViewListener {
      * 切换画幅比例
      */
     void onChangeAspectRatioClick(int ratio);
+
+    void onImportClick();
 }

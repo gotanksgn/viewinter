@@ -24,15 +24,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alivc_recorder_setting_open_skin_filter"
-        android:onClick="openBeauty"/>
+        android:onClickBack="openBeauty"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alivc_recorder_setting_open_face_detection"
-        android:onClick="openFaceDetect"/>
+        android:onClickBack="openFaceDetect"/>
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/alivc_recorder_setting_start"
-        android:onClick="start"/>
+        android:onClickBack="start"/>
 </LinearLayout>

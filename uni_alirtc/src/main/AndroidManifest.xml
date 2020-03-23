@@ -20,7 +20,7 @@
 
     <application>
         <activity
-            android:name=".activity.VideoChatActivity"
+            android:name="com.gotanks.uni_alirtc.activity.VideoChatActivity"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
