@@ -1,2 +1,0 @@
-setCssToHead([".",[1],"container{ height: ",[0,1000],"; }\n",],undefined,{path:"./pages/tabbar/mid/mid.wxss"})();
-document.dispatchEvent(new CustomEvent("generateFuncReady", { detail: { generateFunc: $gwx('./pages/tabbar/mid/mid.wxml') } }));
