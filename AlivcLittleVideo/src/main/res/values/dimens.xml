@@ -27,7 +27,7 @@
     <dimen name="alivc_little_menu_recorder_margin">80dp</dimen>
     <!-- menu dialog view end-->
 
-    <!-- video content view start-->
+    <!-- video title view start-->
     <dimen name="alivc_little_content_view_user_icon_width">36dp</dimen>
     <dimen name="alivc_little_content_view_user_icon_height">36dp</dimen>
     <dimen name="alivc_little_content_view_nick_name_text_size">15sp</dimen>
@@ -36,7 +36,7 @@
     <dimen name="alivc_little_content_view_video_title_text_size">14sp</dimen>
     <dimen name="alivc_little_content_view_video_title_margin_top">11dp</dimen>
     <dimen name="alivc_little_content_view_video_title_max_width">210dp</dimen>
-    <!-- video content view end-->
+    <!-- video title view end-->
 
     <!-- loading view height-->
     <dimen name="alivc_little_publish_cover_h">250dp</dimen>

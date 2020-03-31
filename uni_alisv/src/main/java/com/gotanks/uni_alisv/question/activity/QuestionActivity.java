@@ -1,4 +1,4 @@
-package com.gotanks.uni_alisv.recorder.activity;
+package com.gotanks.uni_alisv.question.activity;
 
 import android.Manifest;
 import android.app.Activity;
@@ -15,8 +15,10 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.aliyun.common.utils.MySystemParams;
@@ -45,18 +47,19 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * 新版本(> 3.6.5之后)录制模块的实现类, 主要是为了承载 AliyunSvideoRecordView
- */
-public class AlivcSvideoRecordActivity extends AppCompatActivity {
+public class QuestionActivity extends AppCompatActivity {
+
 
     private AliyunSVideoRecordView videoRecordView;
+    private View vLytTip;
+    private View vBtnFloat;
+    private View vBtnOk;
+    private String question;
+    private TextView vTvQuestionContentFloat;
+    private TextView vTvQuestionContent;
     private AlivcRecordInputParam mInputParam;
     private static final int REQUEST_CODE_PLAY = 2002;
-    /**
-     * 录制过程中是否使用了音乐
-     */
-    private boolean isUseMusic;
+
     /**
      * 判断是否电话状态
      * true: 响铃, 通话
@@ -75,21 +78,6 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
     private Toast phoningToast;
     private PhoneStateManger phoneStateManger;
 
-    /**
-     * 判断是编辑模块进入还是通过社区模块的编辑功能进入
-     */
-    private static final String INTENT_PARAM_KEY_ENTRANCE = "entrance";
-
-    /**
-     * 判断是否有音乐, 如果有音乐, 编辑界面不能使用音效
-     */
-    private static final String INTENT_PARAM_KEY_HAS_MUSIC = "hasRecordMusic";
-    /**
-     * 判断是编辑模块进入还是通过社区模块的编辑功能进入
-     * svideo: 短视频
-     * community: 社区
-     */
-    private String mRecordEntrance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,13 +96,39 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         initAssetPath();
 
 
-        setContentView(R.layout.alivc_recorder_activity_record);
+        setContentView(R.layout.activity_question);
         getData();
         boolean checkResult = PermissionUtils.checkPermissionsGroup(this, permission);
         if (!checkResult) {
             PermissionUtils.requestPermissions(this, permission, PERMISSION_REQUEST_CODE);
         }
         videoRecordView = findViewById(R.id.alivc_recordView);
+        vTvQuestionContentFloat = findViewById(R.id.vTvQuestionContentFloat);
+        vTvQuestionContent = findViewById(R.id.vTvQuestionContent);
+
+        vTvQuestionContentFloat.setText(question);
+        vTvQuestionContent.setText(question);
+
+        vLytTip = findViewById(R.id.vLytTip);
+        vBtnOk = findViewById(R.id.vBtnOk);
+        vBtnFloat = findViewById(R.id.vBtnFloat);
+
+        vBtnFloat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vLytTip.setVisibility(View.GONE);
+                vTvQuestionContentFloat.setVisibility(View.VISIBLE);
+            }
+        });
+
+
+        vBtnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                vLytTip.setVisibility(View.GONE);
+                vTvQuestionContentFloat.setVisibility(View.GONE);
+            }
+        });
         videoRecordView.setActivity(this);
         if (mInputParam != null) {
             videoRecordView.setGop(mInputParam.getGop());
@@ -126,6 +140,8 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
             videoRecordView.setVideoCodec(mInputParam.getVideoCodec());
             //配置录制recorder
             videoRecordView.setRecorder(AlivcRecorderFactory.createAlivcRecorderFactory(AlivcRecorderFactory.RecorderType.GENERAL, this));
+
+            videoRecordView.setInQuestion(true);
 
         }
         if (PermissionUtils.checkPermissionsGroup(this, PermissionUtils.PERMISSION_STORAGE)) {
@@ -144,15 +160,15 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
     public static class AssetPathInitTask extends AsyncTask<Void, Void, Void> {
 
-        private final WeakReference<AlivcSvideoRecordActivity> weakReference;
+        private final WeakReference<QuestionActivity> weakReference;
 
-        AssetPathInitTask(AlivcSvideoRecordActivity activity) {
+        AssetPathInitTask(QuestionActivity activity) {
             weakReference = new WeakReference<>(activity);
         }
 
         @Override
         protected Void doInBackground(Void... voids) {
-            AlivcSvideoRecordActivity activity = weakReference.get();
+            QuestionActivity activity = weakReference.get();
             if (activity != null) {
                 activity.setAssetPath();
             }
@@ -180,7 +196,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                copyAssetsTask = new CopyAssetsTask(AlivcSvideoRecordActivity.this).executeOnExecutor(
+                copyAssetsTask = new QuestionActivity.CopyAssetsTask(QuestionActivity.this).executeOnExecutor(
                         AsyncTask.THREAD_POOL_EXECUTOR);
             }
         }, 700);
@@ -189,18 +205,18 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
     public static class CopyAssetsTask extends AsyncTask<Void, Void, Void> {
 
-        private WeakReference<AlivcSvideoRecordActivity> weakReference;
+        private WeakReference<QuestionActivity> weakReference;
         ProgressDialog progressBar;
 
-        CopyAssetsTask(AlivcSvideoRecordActivity activity) {
+        CopyAssetsTask(QuestionActivity activity) {
 
-            weakReference = new WeakReference<>(activity);
+            weakReference = new WeakReference<QuestionActivity>(activity);
         }
 
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            AlivcSvideoRecordActivity activity = weakReference.get();
+            QuestionActivity activity = weakReference.get();
             if (activity != null) {
                 progressBar = new ProgressDialog(activity);
 //                progressBar.setMessage(activity.getResources().getString(R.string.aliyun_res_copy));
@@ -214,7 +230,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
         @Override
         protected Void doInBackground(Void... voids) {
-            AlivcSvideoRecordActivity activity = weakReference.get();
+            QuestionActivity activity = weakReference.get();
             if (activity != null) {
                 Common.copyAll(activity);
             }
@@ -225,7 +241,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         protected void onPostExecute(Void aVoid) {
             super.onPostExecute(aVoid);
             progressBar.dismiss();
-            AlivcSvideoRecordActivity activity = weakReference.get();
+            QuestionActivity activity = weakReference.get();
             if (activity != null) {
                 //资源复制完成之后设置一下人脸追踪，防止第一次人脸动图应用失败的问题
                 activity.videoRecordView.setFaceTrackModePath();
@@ -240,6 +256,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      */
     private void getData() {
         Intent intent = getIntent();
+        question = intent.getStringExtra("APP_QUESTION");
         int resolutionMode = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, AlivcRecordInputParam.RESOLUTION_720P);
         int maxDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MAX_DURATION);
         int minDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MIN_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MIN_DURATION);
@@ -328,7 +345,8 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
 
             @Override
             public void onClickHelpTip() {
-
+                vLytTip.setVisibility(View.VISIBLE);
+                vTvQuestionContentFloat.setVisibility(View.GONE);
             }
         });
 
@@ -347,14 +365,15 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
                 AlivcEditInputParam param = new AlivcEditInputParam.Builder()
                         .setHasTailAnimation(false)
                         .addMediaInfos(infoList)
-                        .setCanReplaceMusic(isUseMusic)
+                        .setCanReplaceMusic(false)
                         .setGop(mInputParam.getGop())
                         .setFrameRate(mInputParam.getFrame())
                         .setVideoQuality(mInputParam.getVideoQuality())
                         .setVideoCodec(mInputParam.getVideoCodec())
+                        .setQuestionMode(true)
                         .setRatio(ratio)
                         .build();
-                EditorActivity.startEditForResult(AlivcSvideoRecordActivity.this, param);
+                EditorActivity.startEditForResult(QuestionActivity.this, param);
             }
         });
     }
@@ -430,8 +449,8 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * @param context          上下文
      * @param recordInputParam 录制输入参数
      */
-    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam) {
-        Intent intent = new Intent(context, AlivcSvideoRecordActivity.class);
+    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam, String question) {
+        Intent intent = new Intent(context, QuestionActivity.class);
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, recordInputParam.getResolutionMode());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, recordInputParam.getMaxDuration());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MIN_DURATION, recordInputParam.getMinDuration());
@@ -441,6 +460,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_QUALITY, recordInputParam.getVideoQuality());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_CODEC, recordInputParam.getVideoCodec());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_VIDEO_OUTPUT_PATH, recordInputParam.getVideoOutputPath());
+        intent.putExtra("APP_QUESTION", question);
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 
@@ -513,6 +533,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
                 .setFrameRate(LittleVideoParamConfig.Editor.VIDEO_FRAMERATE)
                 .setGop(LittleVideoParamConfig.Editor.VIDEO_GOP)
                 .build();
-        EditorMediaActivity.startImportForResult(AlivcSvideoRecordActivity.this, param);
+        EditorMediaActivity.startImportForResult(QuestionActivity.this, param);
     }
+
 }

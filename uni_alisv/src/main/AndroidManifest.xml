@@ -16,6 +16,10 @@
 
     <application>
         <activity
+            android:name=".question.activity.QuestionActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AlivcRecordUIStyle" />
+        <activity
             android:name=".publish.CoverEditActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
@@ -23,13 +27,11 @@
             android:name=".editor.activity.EditorMediaActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
-
         <activity
             android:name=".crop.AliyunVideoCropActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/AliyunVideoUIStytle"
-            tools:replace="android:theme"
-            android:screenOrientation="portrait" />
-
+            tools:replace="android:theme" />
         <activity
             android:name=".publish.PublishActivity"
             android:screenOrientation="portrait"

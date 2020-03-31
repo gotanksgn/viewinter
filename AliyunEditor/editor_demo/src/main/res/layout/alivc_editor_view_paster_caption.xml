@@ -9,7 +9,7 @@
     <FrameLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@android:id/content"
+            android:id="@android:id/title"
             android:contentDescription="@null"
             android:duplicateParentState="true"
             android:background="@drawable/aliyun_svideo_theme_default_edit_diy_overlay_content_frame_selector">

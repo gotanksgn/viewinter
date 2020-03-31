@@ -56,6 +56,8 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     public static final String KEY_PARAM_VIDEO_RATIO = "key_param_video_ratio";
     public static final String KEY_PARAM_VIDEO_WIDTH = "key_param_video_width";
     public static final String KEY_PARAM_VIDEO_HEIGHT = "key_param_video_height";
+    public static final String KEY_PARAM_QUESTION_MODE = "key_param_question_mode";
+
 
     private View mActionBar;
     private ImageView mIvLeft;
@@ -78,9 +80,14 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     private AsyncTask<String, Void, Bitmap> mAsyncTaskResult;
     private String mConfigPath;
     private RadioGroup vRgPublishType;
+    private TextView tv_center;
+    private TextView vTvPublishName;
 
     private int videoWidth;
     private int videoHeight;
+
+    private boolean isQuestionMode;
+
 
     /**
      * 视频缩略图截取，不同于MediaMetadataRetriever，可精准获取视频非关键帧图片
@@ -95,6 +102,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.alivc_editor_activity_publish);
+        isQuestionMode = getIntent().getBooleanExtra(KEY_PARAM_QUESTION_MODE, false);
         initView();
         mConfigPath = getIntent().getStringExtra(KEY_PARAM_CONFIG);
         mThumbnailPath = getIntent().getStringExtra(KEY_PARAM_THUMBNAIL);
@@ -189,6 +197,8 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     }
 
     private void initView() {
+        tv_center = findViewById(R.id.tv_center);
+        vTvPublishName = findViewById(R.id.vTvPublishName);
         mActionBar = findViewById(R.id.action_bar);
         mActionBar.setBackgroundColor(
                 getResources().getColor(R.color.alivc_common_theme_primary_alpha_50));
@@ -212,6 +222,13 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         mComposeStatusText = (TextView) findViewById(R.id.compose_status_text);
         mComposeStatusTip = (TextView) findViewById(R.id.compose_status_tip);
         vRgPublishType = findViewById(R.id.vRgPublishType);
+
+        if (isQuestionMode) {
+            vTvPublishName.setText("提交");
+            tv_center.setText("提交视频");
+            mPublish.setText("提交");
+            findViewById(R.id.vLytOptions).setVisibility(View.INVISIBLE);
+        }
     }
 
     private int count(String text) {
@@ -677,7 +694,11 @@ public class PublishActivity extends Activity implements View.OnClickListener {
                         intent.putExtra("publishType", String.valueOf(findViewById(vRgPublishType.getCheckedRadioButtonId()).getTag()));
                         setResult(RESULT_OK, intent);
                         hideUploadProgress();
-                        ToastUtil.showToast(getApplicationContext(), "上传成功");
+                        if (isQuestionMode) {
+                            ToastUtil.showToast(getApplicationContext(), "提交成功");
+                        } else {
+                            ToastUtil.showToast(getApplicationContext(), "上传成功");
+                        }
                         finish();
                     }
                 }

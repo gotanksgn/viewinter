@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    android:orientation="vertical"
+    tools:context=".recorder.activity.AlivcSvideoRecordActivity">
+
+    <com.gotanks.uni_alisv.recorder.view.AliyunSVideoRecordView
+        android:id="@+id/alivc_recordView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/vTvQuestionContentFloat"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:layout_marginRight="80dp"
+        android:padding="@dimen/alivc_common_padding_10"
+        android:text="XXX"
+        android:textColor="#FC4448"
+        android:textSize="13sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:id="@+id/vLytTip"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_margin="@dimen/alivc_common_padding_25"
+        android:background="@drawable/run_answer_bg"
+        android:orientation="vertical"
+        android:padding="@dimen/alivc_common_padding_15">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:padding="@dimen/alivc_common_padding_8"
+            android:text="提示"
+            android:textColor="#333333"
+            android:textSize="18sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="请录制1分钟以内的视频回答以下问题:"
+            android:textColor="#333333"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/vTvQuestionContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/alivc_common_padding_8"
+            android:layout_marginBottom="@dimen/alivc_common_padding_4"
+            android:gravity="center"
+            android:text="XX"
+            android:textColor="#FC4448"
+            android:textSize="16sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/vBtnOk"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/alivc_common_padding_8"
+                android:text="隐藏问题"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+
+            <TextView
+                android:id="@+id/vBtnFloat"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="@dimen/alivc_common_padding_8"
+                android:text="置顶问题"
+                android:textColor="#333333"
+                android:textSize="17sp" />
+        </LinearLayout>
+
+    </LinearLayout>
+</FrameLayout>
