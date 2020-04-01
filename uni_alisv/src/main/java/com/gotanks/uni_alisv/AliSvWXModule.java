@@ -3,6 +3,7 @@ package com.gotanks.uni_alisv;
 import android.app.Activity;
 
 import com.alibaba.fastjson.JSONObject;
+import com.gotanks.uni_alisv.question.activity.QuestionActivity;
 import com.gotanks.uni_alisv.recorder.activity.AlivcSvideoRecordActivity;
 import com.gotanks.uni_alisv.recorder.bean.AlivcRecordInputParam;
 import com.taobao.weex.WXSDKEngine;
@@ -21,11 +22,23 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
 
     @JSMethod(uiThread = true)
     public void show(JSONObject options, JSCallback jsCallback) {
-
         if (mWXSDKInstance.getContext() instanceof Activity) {
             Activity activity = (Activity) mWXSDKInstance.getContext();
             AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
             AlivcSvideoRecordActivity.startRecordForResult(activity, recordParam);
+            JSONObject result = new JSONObject();
+            result.put("type", "button");
+            jsCallback.invoke(result);
+        }
+    }
+
+    @JSMethod(uiThread = true)
+    public void showQuestion(JSONObject options, JSCallback jsCallback) {
+        if (mWXSDKInstance.getContext() instanceof Activity) {
+            Activity activity = (Activity) mWXSDKInstance.getContext();
+            String question = options.getString("question");
+            AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
+            QuestionActivity.startRecordForResult(activity, recordParam, question);
             JSONObject result = new JSONObject();
             result.put("type", "button");
             jsCallback.invoke(result);

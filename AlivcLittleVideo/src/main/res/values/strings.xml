@@ -7,7 +7,7 @@
 
     <!-- about dialog  end-->
 
-    <!-- tips content-->
+    <!-- tips title-->
 
     <string name="alivc_uninclude_module">uninclude this module</string>
     <!--little video main page-->
@@ -38,7 +38,7 @@
     <string name="alivc_little_play_tip_resource_none">None</string>
     <string name="alivc_little_play_date_none">None</string>
     <string name="alivc_little_play_tip_reviewing">Reviewing</string>
-    <string name="alivc_little_play_tip_not_pass">Sorry, the video contains inappropriate content.</string>
+    <string name="alivc_little_play_tip_not_pass">Sorry, the video contains inappropriate title.</string>
     <!--user center page-->
     <string name="alivc_little_mine_reviewing">Reviewing</string>
     <string name="alivc_little_mine_passed">Passed</string>
@@ -46,8 +46,8 @@
     <string name="alivc_little_mine_my_video">my video</string>
     <string name="alivc_little_mine_dialog_confirm">Confirm</string>
     <string name="alivc_little_mine_dialog_cancel">Cancel</string>
-    <string name="alivc_little_mine_dialog_audit_fail">Sorry, the video contains inappropriate content. The video has been deleted?</string>
-    <string name="alivc_little_mine_not_support_play">Moderating video content. You cannot watch the video now！</string>
+    <string name="alivc_little_mine_dialog_audit_fail">Sorry, the video contains inappropriate title. The video has been deleted?</string>
+    <string name="alivc_little_mine_not_support_play">Moderating video title. You cannot watch the video now！</string>
     <!--setting page-->
     <string name="alivc_little_setting_video_version_code">little video version code : V</string>
 

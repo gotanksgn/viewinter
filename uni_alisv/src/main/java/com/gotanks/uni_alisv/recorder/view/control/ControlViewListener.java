@@ -78,4 +78,6 @@ public interface ControlViewListener {
     void onChangeAspectRatioClick(int ratio);
 
     void onImportClick();
+
+    void onHelpTipClick();
 }

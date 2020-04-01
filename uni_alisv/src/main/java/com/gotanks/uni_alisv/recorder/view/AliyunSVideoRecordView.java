@@ -404,6 +404,11 @@ public class AliyunSVideoRecordView extends FrameLayout
         }
     }
 
+    public void setInQuestion(boolean isInQuestion) {
+        mControlView.setInQuestion(isInQuestion);
+        mControlView.setEnableImport(false);
+    }
+
     private static class FaceUnityTask extends AsyncTask<Void, Void, Void> {
 
         private WeakReference<AliyunSVideoRecordView> weakReference;
@@ -710,6 +715,13 @@ public class AliyunSVideoRecordView extends FrameLayout
             public void onImportClick() {
                 if (mBackClickListener != null) {
                     mBackClickListener.onClickImport();
+                }
+            }
+
+            @Override
+            public void onHelpTipClick() {
+                if (mBackClickListener != null) {
+                    mBackClickListener.onClickHelpTip();
                 }
             }
         });
@@ -1765,6 +1777,8 @@ public class AliyunSVideoRecordView extends FrameLayout
         void onClickBack();
 
         void onClickImport();
+
+        void onClickHelpTip();
     }
 
     /**

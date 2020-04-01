@@ -14,6 +14,7 @@ import android.view.WindowManager;
 
 import com.aliyun.qupai.import_core.AliyunIImport;
 import com.aliyun.qupai.import_core.AliyunImportCreator;
+import com.aliyun.svideo.base.MediaInfo;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunImageClip;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunVideoClip;
 import com.aliyun.svideo.sdk.external.struct.common.AliyunVideoParam;
@@ -25,7 +26,6 @@ import com.gotanks.uni_alisv.R;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditOutputParam;
 import com.gotanks.uni_alisv.editor.view.AlivcEditView;
-import com.aliyun.svideo.base.MediaInfo;
 import com.gotanks.uni_alisv.publish.PublishActivity;
 import com.gotanks.uni_alisv.recorder.util.NotchScreenUtil;
 
@@ -44,6 +44,7 @@ public class EditorActivity extends FragmentActivity {
      */
     private AlivcEditInputParam mInputParam;
     private AliyunVideoParam mVideoParam;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,21 +69,35 @@ public class EditorActivity extends FragmentActivity {
         editView.setHasRecordMusic(isReplaceMusic);
         editView.setIsMixRecord(isMixRecorder);
 
+        if (mInputParam.isQuestionMode()) {
+            editView.setTitle("答案预览");
+//            editView.setNextAction("提交视频");
+        }
+
         editView.setmOnFinishListener(new AlivcEditView.OnFinishListener() {
             @Override
             public void onComplete(AlivcEditOutputParam outputParam) {
+//                //  如果是 视频问答 直接发布  先使用 发布页面
+//                if (mInputParam.isQuestionMode()) {
+//                    return;
+//                }
+
+
                 //编辑完成跳转到其他界面
                 Intent intent = new Intent(EditorActivity.this, PublishActivity.class);
                 intent.putExtra(PublishActivity.KEY_PARAM_THUMBNAIL, outputParam.getThumbnailPath());
                 intent.putExtra(PublishActivity.KEY_PARAM_CONFIG, outputParam.getConfigPath());
                 intent.putExtra(PublishActivity.KEY_PARAM_VIDEO_WIDTH, outputParam.getOutputVideoWidth());
                 intent.putExtra(PublishActivity.KEY_PARAM_VIDEO_HEIGHT, outputParam.getOutputVideoHeight());
+                intent.putExtra(PublishActivity.KEY_PARAM_QUESTION_MODE, mInputParam.isQuestionMode());
                 //传入视频比列
                 intent.putExtra(PublishActivity.KEY_PARAM_VIDEO_RATIO, outputParam.getVideoRatio());
                 intent.putExtra("videoParam", outputParam.getVideoParam());
                 startActivityForResult(intent, AliSvWXModule.REQ_CODE);
+
             }
         });
+
     }
 
     private void initData() {
@@ -123,6 +138,7 @@ public class EditorActivity extends FragmentActivity {
                 .setHasTailAnimation(mHasTailAnimation)
                 .setCanReplaceMusic(canReplaceMusic)
                 .addMediaInfos(mediaInfos)
+                .setQuestionMode(intent.getBooleanExtra(AlivcEditInputParam.INTENT_KEY_QUESTION_MODE, false))
                 .setHasWaterMark(hasWaterMark)
                 .setIsMixRecorder(isMixRecord)
                 .build();
@@ -168,7 +184,7 @@ public class EditorActivity extends FragmentActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == AliSvWXModule.REQ_CODE) {
+        if (requestCode == AliSvWXModule.REQ_CODE && resultCode == RESULT_OK) {
             setResult(resultCode, data);
             finish();
             return;
@@ -249,6 +265,8 @@ public class EditorActivity extends FragmentActivity {
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_WATER_MARK, param.isHasWaterMark());
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_RATION_MODE, param.getRatio());
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_IS_MIX, param.isMixRecorder());
+
+        intent.putExtra(AlivcEditInputParam.INTENT_KEY_QUESTION_MODE, param.isQuestionMode());
         intent.putParcelableArrayListExtra(AlivcEditInputParam.INTENT_KEY_MEDIA_INFO, param.getMediaInfos());
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }

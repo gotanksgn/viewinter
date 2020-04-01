@@ -35,6 +35,9 @@ public class AlivcEditInputParam {
     public static final String INTENT_KEY_REPLACE_MUSIC = "canReplaceMusic";
     public static final String INTENT_KEY_WATER_MARK = "hasWaterMark";
     public static final String INTENT_KEY_MEDIA_INFO = "mediaInfos";
+    public static final String INTENT_KEY_QUESTION_MODE = "isQuestionMode";
+
+
     /**
      * 是否是合拍
      */
@@ -102,6 +105,11 @@ public class AlivcEditInputParam {
      * 是否是合拍
      */
     private boolean isMixRecorder;
+
+    /**
+     * 是否视频问答
+     */
+    private boolean isQuestionMode;
 
     private ArrayList<MediaInfo> mediaInfos;
     private boolean hasWaterMark = false;//趣视频默认不显示视频水印
@@ -333,6 +341,14 @@ public class AlivcEditInputParam {
         return mCrf;
     }
 
+    public boolean isQuestionMode() {
+        return isQuestionMode;
+    }
+
+    public void setQuestionMode(boolean questionMode) {
+        isQuestionMode = questionMode;
+    }
+
     public float getScaleRate() {
         return mScaleRate;
     }
@@ -450,5 +466,9 @@ public class AlivcEditInputParam {
             return mParam;
         }
 
+        public Builder setQuestionMode(boolean isQuestionMode) {
+            mParam.isQuestionMode = isQuestionMode;
+            return this;
+        }
     }
 }

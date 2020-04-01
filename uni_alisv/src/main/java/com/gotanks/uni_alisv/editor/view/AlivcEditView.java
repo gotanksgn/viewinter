@@ -163,6 +163,9 @@ public class AlivcEditView extends RelativeLayout
     private LinearLayout mBarLinear;
     private TextView mPlayImage;
     private TextView mTvCurrTime;
+    private TextView tv_center;
+
+
     /**
      * 屏幕宽度
      */
@@ -296,6 +299,7 @@ public class AlivcEditView extends RelativeLayout
 
     @SuppressLint("ClickableViewAccessibility")
     private void initView() {
+        tv_center = findViewById(R.id.tv_center);
         resCopy = (FrameLayout) findViewById(R.id.copy_res_tip);
         mTransCodeTip = (FrameLayout) findViewById(R.id.transcode_tip);
         mTransCodeProgress = (ProgressBar) findViewById(R.id.transcode_progress);
@@ -928,6 +932,19 @@ public class AlivcEditView extends RelativeLayout
      */
     public boolean isMaxRecord() {
         return isMixRecord;
+    }
+
+    public void setTitle(String title) {
+        if (title != null) {
+            tv_center.setText(title);
+            tv_center.setVisibility(VISIBLE);
+        }
+    }
+
+    public void setNextAction(String nextAction) {
+        if (nextAction != null) {
+            mTvRight.setText(nextAction);
+        }
     }
 
     public static class AlivcEditThread implements ThreadFactory {

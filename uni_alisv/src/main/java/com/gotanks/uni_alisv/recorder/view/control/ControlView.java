@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.StateListDrawable;
-import android.support.annotation.DrawableRes;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -19,8 +18,6 @@ import android.widget.TextView;
 
 import com.aliyun.svideo.base.UIConfigManager;
 import com.aliyun.svideo.base.utils.FastClickUtil;
-import com.aliyun.svideo.common.utils.image.ImageLoaderImpl;
-import com.aliyun.svideo.common.utils.image.ImageLoaderOptions;
 import com.aliyun.svideo.sdk.external.struct.snap.AliyunSnapVideoParam;
 import com.gotanks.uni_alisv.R;
 
@@ -46,6 +43,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     private View vIvToggleRateBar;
     private FrameLayout aliyunRecordBtn;
     private View vStartImport;
+    private boolean enableImport = true;
     private TextView aliyunDelete;
     //    private LinearLayout mAlivcMusic;
     private TextView mRecordTipTV;
@@ -87,6 +85,8 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     //录制类型
     private Boolean mRecorderType = false;
 
+    private TextView vTvTitle;
+
     public ControlView(Context context) {
         this(context, null);
     }
@@ -112,6 +112,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     }
 
     private void assignViews() {
+        vTvTitle = findViewById(R.id.vTvTitle);
         vIvToggleRateBar = findViewById(R.id.vIvToggleRateBar);
         vLytActionGroup = findViewById(R.id.vLytActionGroup);
 //        mAlivcAspectRatio = findViewById(R.id.alivc_record_change_aspect_ratio_layout);
@@ -552,7 +553,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
         if (recordState == RecordState.STOP) {
             vLytActionGroup.setVisibility(VISIBLE);
         } else {
-            vLytActionGroup.setVisibility(GONE);
+            vLytActionGroup.setVisibility(INVISIBLE);
         }
     }
 
@@ -884,7 +885,7 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     }
 
     private void updateImportView() {
-        if (hasRecordPiece || recordState != RecordState.STOP) {
+        if (hasRecordPiece || recordState != RecordState.STOP || !enableImport) {
             vStartImport.setVisibility(GONE);
         } else {
             vStartImport.setVisibility(VISIBLE);
@@ -950,31 +951,6 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     }
 
     /**
-     * 设置应用音乐icon
-     *
-     * @param icon
-     */
-    public void setMusicIcon(String icon) {
-        new ImageLoaderImpl()
-
-                .loadImage(getContext(), icon, new ImageLoaderOptions.Builder()
-                        .circle()
-                        .error(R.mipmap.aliyun_svideo_music)
-                        .crossFade()
-                        .build())
-                .into(mIvMusicIcon);
-    }
-
-    /**
-     * 设置应用音乐icon
-     *
-     * @param id
-     */
-    public void setMusicIconId(@DrawableRes int id) {
-        mIvMusicIcon.setImageResource(id);
-    }
-
-    /**
      * 设置画幅比例
      */
     public void setAspectRatio(int radio) {
@@ -987,5 +963,38 @@ public class ControlView extends RelativeLayout implements View.OnTouchListener 
     public void setRecordType(Boolean recordType) {
         mRecorderType = recordType;
         updateTittleView();
+    }
+
+    private boolean isInQuestion;
+
+    public void setEnableImport(boolean enable) {
+        this.enableImport = enable;
+        this.updateImportView();
+    }
+
+    public void setInQuestion(boolean isInQuestion) {
+        if (isInQuestion) {
+            ViewGroup viewGroup = (ViewGroup) aliyunSwitchCamera.getParent();
+            viewGroup.setVisibility(GONE);
+
+            viewGroup = (ViewGroup) vIvToggleRateBar.getParent();
+            viewGroup.setVisibility(GONE);
+
+            viewGroup = (ViewGroup) aliyunSwitchLight.getParent();
+            viewGroup.setVisibility(GONE);
+
+            vTvTitle.setText("答案录制");
+
+            View vBtnTip = findViewById(R.id.vBtnTip);
+            vBtnTip.setVisibility(VISIBLE);
+            vBtnTip.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mListener != null) {
+                        mListener.onHelpTipClick();
+                    }
+                }
+            });
+        }
     }
 }
