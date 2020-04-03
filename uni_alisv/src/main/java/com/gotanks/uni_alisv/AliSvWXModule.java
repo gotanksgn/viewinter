@@ -1,6 +1,8 @@
 package com.gotanks.uni_alisv;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
 
 import com.alibaba.fastjson.JSONObject;
 import com.gotanks.uni_alisv.question.activity.QuestionActivity;
@@ -20,28 +22,38 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
     public static final int MIN_TIME = 10 * 1000;
     public static final int MAX_TIME = 60 * 1000;
 
+    private JSCallback jsCallback;
+
     @JSMethod(uiThread = true)
-    public void show(JSONObject options, JSCallback jsCallback) {
+    public void recordVcr(JSONObject options, JSCallback jsCallback) {
         if (mWXSDKInstance.getContext() instanceof Activity) {
+            this.jsCallback = jsCallback;
             Activity activity = (Activity) mWXSDKInstance.getContext();
             AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
             AlivcSvideoRecordActivity.startRecordForResult(activity, recordParam);
-            JSONObject result = new JSONObject();
-            result.put("type", "button");
-            jsCallback.invoke(result);
         }
     }
 
     @JSMethod(uiThread = true)
-    public void showQuestion(JSONObject options, JSCallback jsCallback) {
+    public void recordQuestion(JSONObject options, JSCallback jsCallback) {
         if (mWXSDKInstance.getContext() instanceof Activity) {
+            this.jsCallback = jsCallback;
             Activity activity = (Activity) mWXSDKInstance.getContext();
             String question = options.getString("question");
             AlivcRecordInputParam recordParam = new AlivcRecordInputParam.Builder().build();
             QuestionActivity.startRecordForResult(activity, recordParam, question);
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(this.jsCallback != null) {
+            Bundle bundle = data.getExtras();
             JSONObject result = new JSONObject();
-            result.put("type", "button");
-            jsCallback.invoke(result);
+            result.put("videoId", bundle.getString("videoId"));
+            result.put("videoDesc", bundle.getString("describe"));
+            result.put("visibility", bundle.getString("visibility"));
+            this.jsCallback.invoke(result);
         }
     }
 

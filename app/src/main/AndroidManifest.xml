@@ -54,7 +54,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-
+    <!-- 版本升级 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES"/>
     <application
         android:name="com.jagt.viewinter1.application.MyApplication"
         android:allowClearUserData="true"
@@ -97,6 +98,16 @@
 
         <meta-data android:name="com.amap.api.v2.apikey" android:value="8d1f7d99a3bf4e72a417b403e849a132"></meta-data>
         <service android:name="com.amap.api.location.APSService"></service>
+
+        <provider
+            android:name="io.dcloud.common.util.DCloud_FileProvider"
+            android:authorities="com.jagt.viewinter1.dc.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/dcloud_file_provider" />
+        </provider>
     </application>
 
 </manifest>

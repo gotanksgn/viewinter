@@ -68,5 +68,5 @@ ext {
     externalMinSdkVersion = 19
     externalPlayerMinSdkVersion = 16
     externalLiveMinSdkVersion = 18
-    externalTargetSdkVersion = 23
+    externalTargetSdkVersion = 26
 }
