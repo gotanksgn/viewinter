@@ -32,10 +32,6 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
         videoChatArgs.putSerializable("rtcAuthInfo", rtcAuthInfo);
         VideoChatActivity.launchForResult(activity, videoChatArgs);
 
-
-        JSONObject result = new JSONObject();
-        result.put("type", "button");
-        jsCallback.invoke(result);
     }
 
     @JSMethod(uiThread = true)

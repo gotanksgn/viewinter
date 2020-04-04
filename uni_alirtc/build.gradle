@@ -36,16 +36,13 @@ repositories {
     }
 }
 dependencies {
-    compileOnly fileTree(include: ['*.jar','*.aar'], dir: 'libs')
-    compileOnly fileTree(dir: '../app/libs', include: ['uniapp-release.aar'])
+    compileOnly fileTree(dir: '../app/libs', include: ['uniapp-release.aar', 'lib.5plus.base-release.aar'])
     compileOnly 'com.facebook.fresco:fresco:1.13.0'
     compileOnly 'com.alibaba:fastjson:1.2.62'
 
     compileOnly externalAndroidAppCompatV7
     compileOnly externalAndroidRecyclerView
-//    compileOnly 'androidx.recyclerview:recyclerview:1.1.0'
-//    compileOnly 'androidx.appcompat:appcompat:1.1.0'
-//    compileOnly "androidx.legacy:legacy-support-v4:1.0.0"
 
+    implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
 
 }

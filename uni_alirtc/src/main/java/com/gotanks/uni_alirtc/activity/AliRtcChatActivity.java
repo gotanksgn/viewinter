@@ -31,7 +31,6 @@ import com.gotanks.uni_alirtc.utils.AppUtils;
 import com.gotanks.uni_alirtc.utils.DensityUtils;
 
 import org.webrtc.ali.ThreadUtils;
-import org.webrtc.alirtcInterface.ALI_RTC_INTERFACE;
 import org.webrtc.alirtcInterface.AliParticipantInfo;
 import org.webrtc.alirtcInterface.AliStatusInfo;
 import org.webrtc.alirtcInterface.AliSubscriberInfo;
@@ -43,7 +42,9 @@ import static com.alivc.rtc.AliRtcEngine.AliRtcVideoTrack.AliRtcVideoTrackBoth;
 import static com.alivc.rtc.AliRtcEngine.AliRtcVideoTrack.AliRtcVideoTrackCamera;
 import static com.alivc.rtc.AliRtcEngine.AliRtcVideoTrack.AliRtcVideoTrackNo;
 import static com.alivc.rtc.AliRtcEngine.AliRtcVideoTrack.AliRtcVideoTrackScreen;
-import static com.gotanks.uni_alirtc.utils.AliRtcConstants.*;
+import static com.gotanks.uni_alirtc.utils.AliRtcConstants.SOPHON_RESULT_SIGNAL_HEARTBEAT_TIMEOUT;
+import static com.gotanks.uni_alirtc.utils.AliRtcConstants.SOPHON_SERVER_ERROR_POLLING;
+import static com.gotanks.uni_alirtc.utils.AliRtcConstants.VIDEO_INFO_KEYS;
 
 /**
  * 音视频通话的activity
@@ -597,15 +598,15 @@ public class AliRtcChatActivity extends BaseActivity implements View.OnClickList
 
         }
 
-        /**
-         * @param aliRTCSDK_client_role
-         * @param aliRTCSDK_client_role1
-         * 用户角色更新
-         */
-        @Override
-        public void onUpdateRoleNotify(ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role, ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role1) {
-
-        }
+//        /**
+//         * @param aliRTCSDK_client_role
+//         * @param aliRTCSDK_client_role1
+//         * 用户角色更新
+//         */
+//        @Override
+//        public void onUpdateRoleNotify(ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role, ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role1) {
+//
+//        }
     };
 
     /**
@@ -748,10 +749,10 @@ public class AliRtcChatActivity extends BaseActivity implements View.OnClickList
 
         }
 
-        @Override
-        public void onAliRtcStats(ALI_RTC_INTERFACE.AliRtcStats aliRtcStats) {
-
-        }
+//        @Override
+//        public void onAliRtcStats(ALI_RTC_INTERFACE.AliRtcStats aliRtcStats) {
+//
+//        }
 
     };
 

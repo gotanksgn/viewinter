@@ -36,7 +36,6 @@ import com.gotanks.uni_alirtc.utils.AppUtils;
 import com.gotanks.uni_alirtc.utils.DensityUtils;
 
 import org.webrtc.ali.ThreadUtils;
-import org.webrtc.alirtcInterface.ALI_RTC_INTERFACE;
 import org.webrtc.alirtcInterface.AliParticipantInfo;
 import org.webrtc.alirtcInterface.AliStatusInfo;
 import org.webrtc.alirtcInterface.AliSubscriberInfo;
@@ -636,15 +635,15 @@ public class VideoChatActivity extends BaseActivity implements View.OnClickListe
 
         }
 
-        /**
-         * @param aliRTCSDK_client_role
-         * @param aliRTCSDK_client_role1
-         * 用户角色更新
-         */
-        @Override
-        public void onUpdateRoleNotify(ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role, ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role1) {
-
-        }
+//        /**
+//         * @param aliRTCSDK_client_role
+//         * @param aliRTCSDK_client_role1
+//         * 用户角色更新
+//         */
+//        @Override
+//        public void onUpdateRoleNotify(ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role, ALI_RTC_INTERFACE.AliRTCSDK_Client_Role aliRTCSDK_client_role1) {
+//
+//        }
     };
 
     /**
@@ -817,10 +816,10 @@ public class VideoChatActivity extends BaseActivity implements View.OnClickListe
 
         }
 
-        @Override
-        public void onAliRtcStats(ALI_RTC_INTERFACE.AliRtcStats aliRtcStats) {
-
-        }
+//        @Override
+//        public void onAliRtcStats(ALI_RTC_INTERFACE.AliRtcStats aliRtcStats) {
+//
+//        }
 
     };
 
