@@ -99,6 +99,8 @@
     <string name="alivc_little_main_net_error">network error</string>
     <string name="alivc_little_main_video_upload_error">Uploading failed</string>
     <string name="alivc_little_main_picture_upload_error">Uploading failed</string>
+    <string name="alivc_little_main_not_support_edit">手机版本过低，暂不支持编辑</string>
+    <string name="alivc_little_main_not_support_recorder">手机版本过低，暂不支持录制</string>
 
     <string name="alivc_recorder_setting_video_style">拍摄方式</string>
     <string name="alivc_recorder_setting_general_text">普通</string>

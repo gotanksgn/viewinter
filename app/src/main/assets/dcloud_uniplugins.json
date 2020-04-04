@@ -11,7 +11,7 @@
       ]
     },
     {
-      "hooksClass": "",
+      "hooksClass": "com.gotanks.uni_alisv.AliSvAppHookProxy",
       "plugins": [
         {
           "type": "module",
