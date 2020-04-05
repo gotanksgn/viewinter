@@ -1,4 +1,4 @@
-include ':app', ':uni_alirtc', ':uni_alisv'
+include ':app', ':uni_alirtc', ':uni_alisv', ':alirtc-Sophonsdk'
 rootProject.name='Viewinter'
 
 include ':AliyunVideoCommon'

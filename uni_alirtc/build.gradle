@@ -44,5 +44,6 @@ dependencies {
     compileOnly externalAndroidRecyclerView
 
     implementation fileTree(include: ['*.jar','*.aar'], dir: 'libs')
+    implementation project(path: ':alirtc-Sophonsdk')
 
 }
