@@ -19,7 +19,7 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
     private JSCallback jsCallback;
 
     @JSMethod(uiThread = true)
-    public void show(JSONObject options, JSCallback jsCallback) {
+    public void openRtc(JSONObject options, JSCallback jsCallback) {
         this.jsCallback = jsCallback;
         Activity activity = (Activity) mWXSDKInstance.getContext();
         Bundle videoChatArgs = new Bundle();

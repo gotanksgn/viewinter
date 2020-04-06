@@ -25,7 +25,7 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
     private JSCallback jsCallback;
 
     @JSMethod(uiThread = true)
-    public void recordVcr(JSONObject options, JSCallback jsCallback) {
+    public void openRecordVcr(JSONObject options, JSCallback jsCallback) {
         if (mWXSDKInstance.getContext() instanceof Activity) {
             this.jsCallback = jsCallback;
             Activity activity = (Activity) mWXSDKInstance.getContext();
@@ -35,7 +35,7 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
     }
 
     @JSMethod(uiThread = true)
-    public void recordQuestion(JSONObject options, JSCallback jsCallback) {
+    public void openRecordQuestion(JSONObject options, JSCallback jsCallback) {
         if (mWXSDKInstance.getContext() instanceof Activity) {
             this.jsCallback = jsCallback;
             Activity activity = (Activity) mWXSDKInstance.getContext();
