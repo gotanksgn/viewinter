@@ -1,6 +1,7 @@
 package com.gotanks.uni_alirtc;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.alibaba.fastjson.JSONObject;
@@ -15,10 +16,12 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
 
     public static final String TAG = "AliRtcWXModule";
 
+    private JSCallback jsCallback;
+
     @JSMethod(uiThread = true)
     public void show(JSONObject options, JSCallback jsCallback) {
+        this.jsCallback = jsCallback;
         Activity activity = (Activity) mWXSDKInstance.getContext();
-
         Bundle videoChatArgs = new Bundle();
         //用户名
         videoChatArgs.putString("username", options.getString("userid"));
@@ -32,9 +35,15 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
         videoChatArgs.putSerializable("rtcAuthInfo", rtcAuthInfo);
         VideoChatActivity.launchForResult(activity, videoChatArgs);
 
-        JSONObject result = new JSONObject();
-        result.put("finishType", "close");
-        jsCallback.invoke(result);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(this.jsCallback != null) {
+            JSONObject result = new JSONObject();
+            result.put("finishType", "close");
+            this.jsCallback.invoke(result);
+        }
     }
 
     @JSMethod(uiThread = true)
