@@ -1,6 +1,7 @@
 package com.gotanks.uni_alisv.question.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -30,6 +31,7 @@ import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.bean.SvOptions;
 import com.gotanks.uni_alisv.common.LittleVideoParamConfig;
 import com.gotanks.uni_alisv.editor.activity.EditorActivity;
 import com.gotanks.uni_alisv.editor.activity.EditorMediaActivity;
@@ -54,7 +56,7 @@ public class QuestionActivity extends AppCompatActivity {
     private View vLytTip;
     private View vBtnFloat;
     private View vBtnOk;
-    private String question;
+    private SvOptions svOptions;
     private TextView vTvQuestionContentFloat;
     private TextView vTvQuestionContent;
     private AlivcRecordInputParam mInputParam;
@@ -79,6 +81,7 @@ public class QuestionActivity extends AppCompatActivity {
     private PhoneStateManger phoneStateManger;
 
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -106,8 +109,8 @@ public class QuestionActivity extends AppCompatActivity {
         vTvQuestionContentFloat = findViewById(R.id.vTvQuestionContentFloat);
         vTvQuestionContent = findViewById(R.id.vTvQuestionContent);
 
-        vTvQuestionContentFloat.setText(question);
-        vTvQuestionContent.setText(question);
+        vTvQuestionContentFloat.setText(svOptions.getQuestion());
+        vTvQuestionContent.setText(svOptions.getQuestion());
 
         vLytTip = findViewById(R.id.vLytTip);
         vBtnOk = findViewById(R.id.vBtnOk);
@@ -256,7 +259,7 @@ public class QuestionActivity extends AppCompatActivity {
      */
     private void getData() {
         Intent intent = getIntent();
-        question = intent.getStringExtra("APP_QUESTION");
+        svOptions = intent.getParcelableExtra(AliSvWXModule.KEY_OPTIONS);
         int resolutionMode = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, AlivcRecordInputParam.RESOLUTION_720P);
         int maxDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MAX_DURATION);
         int minDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MIN_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MIN_DURATION);
@@ -373,7 +376,7 @@ public class QuestionActivity extends AppCompatActivity {
                         .setQuestionMode(true)
                         .setRatio(ratio)
                         .build();
-                EditorActivity.startEditForResult(QuestionActivity.this, param);
+                EditorActivity.startEditForResult(QuestionActivity.this, param, QuestionActivity.this.svOptions);
             }
         });
     }
@@ -449,7 +452,7 @@ public class QuestionActivity extends AppCompatActivity {
      * @param context          上下文
      * @param recordInputParam 录制输入参数
      */
-    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam, String question) {
+    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam, SvOptions svOptions) {
         Intent intent = new Intent(context, QuestionActivity.class);
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, recordInputParam.getResolutionMode());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, recordInputParam.getMaxDuration());
@@ -460,7 +463,7 @@ public class QuestionActivity extends AppCompatActivity {
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_QUALITY, recordInputParam.getVideoQuality());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_CODEC, recordInputParam.getVideoCodec());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_VIDEO_OUTPUT_PATH, recordInputParam.getVideoOutputPath());
-        intent.putExtra("APP_QUESTION", question);
+        intent.putExtra(AliSvWXModule.KEY_OPTIONS, svOptions);
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 
@@ -533,7 +536,7 @@ public class QuestionActivity extends AppCompatActivity {
                 .setFrameRate(LittleVideoParamConfig.Editor.VIDEO_FRAMERATE)
                 .setGop(LittleVideoParamConfig.Editor.VIDEO_GOP)
                 .build();
-        EditorMediaActivity.startImportForResult(QuestionActivity.this, param);
+        EditorMediaActivity.startImportForResult(QuestionActivity.this, param, this.svOptions);
     }
 
 }

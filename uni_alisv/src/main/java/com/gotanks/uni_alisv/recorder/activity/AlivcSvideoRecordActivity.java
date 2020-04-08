@@ -1,6 +1,7 @@
 package com.gotanks.uni_alisv.recorder.activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -28,6 +29,7 @@ import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.bean.SvOptions;
 import com.gotanks.uni_alisv.common.LittleVideoParamConfig;
 import com.gotanks.uni_alisv.editor.activity.EditorActivity;
 import com.gotanks.uni_alisv.editor.activity.EditorMediaActivity;
@@ -90,7 +92,9 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * community: 社区
      */
     private String mRecordEntrance;
+    private SvOptions svOptions;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -240,6 +244,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      */
     private void getData() {
         Intent intent = getIntent();
+        this.svOptions = intent.getParcelableExtra(AliSvWXModule.KEY_OPTIONS);
         int resolutionMode = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, AlivcRecordInputParam.RESOLUTION_720P);
         int maxDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MAX_DURATION);
         int minDuration = intent.getIntExtra(AlivcRecordInputParam.INTENT_KEY_MIN_DURATION, AlivcRecordInputParam.DEFAULT_VALUE_MIN_DURATION);
@@ -354,7 +359,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
                         .setVideoCodec(mInputParam.getVideoCodec())
                         .setRatio(ratio)
                         .build();
-                EditorActivity.startEditForResult(AlivcSvideoRecordActivity.this, param);
+                EditorActivity.startEditForResult(AlivcSvideoRecordActivity.this, param, AlivcSvideoRecordActivity.this.svOptions);
             }
         });
     }
@@ -430,7 +435,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
      * @param context          上下文
      * @param recordInputParam 录制输入参数
      */
-    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam) {
+    public static void startRecordForResult(Activity context, AlivcRecordInputParam recordInputParam, SvOptions svOptions) {
         Intent intent = new Intent(context, AlivcSvideoRecordActivity.class);
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_RESOLUTION_MODE, recordInputParam.getResolutionMode());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_MAX_DURATION, recordInputParam.getMaxDuration());
@@ -441,6 +446,7 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_QUALITY, recordInputParam.getVideoQuality());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_CODEC, recordInputParam.getVideoCodec());
         intent.putExtra(AlivcRecordInputParam.INTENT_KEY_VIDEO_OUTPUT_PATH, recordInputParam.getVideoOutputPath());
+        intent.putExtra(AliSvWXModule.KEY_OPTIONS, svOptions);
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 
@@ -513,6 +519,6 @@ public class AlivcSvideoRecordActivity extends AppCompatActivity {
                 .setFrameRate(LittleVideoParamConfig.Editor.VIDEO_FRAMERATE)
                 .setGop(LittleVideoParamConfig.Editor.VIDEO_GOP)
                 .build();
-        EditorMediaActivity.startImportForResult(AlivcSvideoRecordActivity.this, param);
+        EditorMediaActivity.startImportForResult(AlivcSvideoRecordActivity.this, param, this.svOptions);
     }
 }
