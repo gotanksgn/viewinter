@@ -23,6 +23,7 @@ import com.aliyun.svideo.sdk.external.struct.common.VideoQuality;
 import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.bean.SvOptions;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditInputParam;
 import com.gotanks.uni_alisv.editor.bean.AlivcEditOutputParam;
 import com.gotanks.uni_alisv.editor.view.AlivcEditView;
@@ -44,6 +45,7 @@ public class EditorActivity extends FragmentActivity {
      */
     private AlivcEditInputParam mInputParam;
     private AliyunVideoParam mVideoParam;
+    private SvOptions svOptions;
 
 
     @Override
@@ -93,6 +95,7 @@ public class EditorActivity extends FragmentActivity {
                 //传入视频比列
                 intent.putExtra(PublishActivity.KEY_PARAM_VIDEO_RATIO, outputParam.getVideoRatio());
                 intent.putExtra("videoParam", outputParam.getVideoParam());
+                intent.putExtra(AliSvWXModule.KEY_OPTIONS, svOptions);
                 startActivityForResult(intent, AliSvWXModule.REQ_CODE);
 
             }
@@ -102,6 +105,7 @@ public class EditorActivity extends FragmentActivity {
 
     private void initData() {
         Intent intent = getIntent();
+        this.svOptions = intent.getParcelableExtra(AliSvWXModule.KEY_OPTIONS);
         int mFrameRate = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_FRAME, 30);
         int mGop = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_GOP, 250);
         int mRatio = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_RATION_MODE, AlivcEditInputParam.RATIO_MODE_9_16);
@@ -246,7 +250,7 @@ public class EditorActivity extends FragmentActivity {
         return projectConfigure;
     }
 
-    public static void startEditForResult(Activity context, AlivcEditInputParam param) {
+    public static void startEditForResult(Activity context, AlivcEditInputParam param, SvOptions svOptions) {
         if (param == null || param.getMediaInfos() == null || param.getMediaInfos().size() == 0) {
             return;
         }
@@ -268,6 +272,8 @@ public class EditorActivity extends FragmentActivity {
 
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_QUESTION_MODE, param.isQuestionMode());
         intent.putParcelableArrayListExtra(AlivcEditInputParam.INTENT_KEY_MEDIA_INFO, param.getMediaInfos());
+
+        intent.putExtra(AliSvWXModule.KEY_OPTIONS, svOptions);
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 

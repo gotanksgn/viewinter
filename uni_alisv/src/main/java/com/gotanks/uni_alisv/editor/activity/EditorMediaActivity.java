@@ -33,6 +33,7 @@ import com.aliyun.svideo.sdk.external.struct.encoder.VideoCodecs;
 import com.duanqu.transcode.NativeParser;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
+import com.gotanks.uni_alisv.bean.SvOptions;
 import com.gotanks.uni_alisv.crop.AliyunVideoCropActivity;
 import com.gotanks.uni_alisv.crop.bean.AlivcCropInputParam;
 import com.gotanks.uni_alisv.crop.bean.AlivcCropOutputParam;
@@ -75,6 +76,7 @@ public class EditorMediaActivity extends Activity {
     private ArrayList<MediaInfo> mBundleSaveMedias;
     private MutiMediaView mMutiMediaView;
     private int mRatio;
+    private SvOptions svOptions;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -88,6 +90,7 @@ public class EditorMediaActivity extends Activity {
         Intent intent = getIntent();
         int mFrameRate = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_FRAME, 30);
         int mGop = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_GOP, 250);
+        svOptions = intent.getParcelableExtra(AliSvWXModule.KEY_OPTIONS);
         mRatio = intent.getIntExtra(AlivcEditInputParam.INTENT_KEY_RATION_MODE, AlivcEditInputParam.RATIO_MODE_9_16);
         VideoQuality mVideoQuality = (VideoQuality) intent.getSerializableExtra(AlivcEditInputParam.INTENT_KEY_QUALITY);
         if (mVideoQuality == null) {
@@ -172,7 +175,7 @@ public class EditorMediaActivity extends Activity {
                     progressDialog.dismiss();
                 }
                 mInputParam.setMediaInfos((ArrayList<MediaInfo>) resultVideos);
-                EditorActivity.startEditForResult(EditorMediaActivity.this, mInputParam);
+                EditorActivity.startEditForResult(EditorMediaActivity.this, mInputParam, EditorMediaActivity.this.svOptions);
             }
 
             @Override
@@ -466,7 +469,7 @@ public class EditorMediaActivity extends Activity {
         }
     }
 
-    public static void startImportForResult(Activity context, AlivcEditInputParam param) {
+    public static void startImportForResult(Activity context, AlivcEditInputParam param, SvOptions svOptions) {
         if (param == null) {
             return;
         }
@@ -484,6 +487,7 @@ public class EditorMediaActivity extends Activity {
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_REPLACE_MUSIC, param.isCanReplaceMusic());
         intent.putExtra(AlivcEditInputParam.INTENT_KEY_WATER_MARK, param.isHasWaterMark());
         intent.putParcelableArrayListExtra(AlivcEditInputParam.INTENT_KEY_MEDIA_INFO, param.getMediaInfos());
+        intent.putExtra(AliSvWXModule.KEY_OPTIONS, svOptions);
         context.startActivityForResult(intent, AliSvWXModule.REQ_CODE);
     }
 

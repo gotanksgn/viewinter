@@ -26,7 +26,9 @@ import com.aliyun.querrorcode.AliyunErrorCode;
 import com.aliyun.qupai.editor.AliyunIComposeCallBack;
 import com.aliyun.qupai.editor.AliyunIVodCompose;
 import com.aliyun.qupai.editor.impl.AliyunVodCompose;
+import com.aliyun.qupaiokhttp.HttpRequest;
 import com.aliyun.qupaiokhttp.RequestParams;
+import com.aliyun.qupaiokhttp.StringHttpRequestCallback;
 import com.aliyun.svideo.base.Constants;
 import com.aliyun.svideo.base.widget.ProgressDialog;
 import com.aliyun.svideo.common.utils.DateTimeUtils;
@@ -38,6 +40,7 @@ import com.aliyun.svideo.sdk.external.thumbnail.AliyunThumbnailFetcherFactory;
 import com.gotanks.uni_alisv.AliSvWXModule;
 import com.gotanks.uni_alisv.R;
 import com.gotanks.uni_alisv.bean.SvOptions;
+import com.gotanks.uni_alisv.constants.AlivcLittleServerApiConstants;
 
 import java.io.File;
 import java.lang.ref.WeakReference;
@@ -47,8 +50,8 @@ import java.lang.ref.WeakReference;
  * 视频合成页面
  */
 
-public class PublishActivity extends Activity implements View.OnClickListener {
-    private static final String TAG = PublishActivity.class.getName();
+public class PublishActivityBak extends Activity implements View.OnClickListener {
+    private static final String TAG = PublishActivityBak.class.getName();
 
     public static final String KEY_PARAM_CONFIG = "project_json_path";
     public static final String KEY_PARAM_THUMBNAIL = "svideo_thumbnail";
@@ -86,6 +89,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     private int videoHeight;
 
     private boolean isQuestionMode;
+
 
 
     /**
@@ -134,10 +138,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
 
     static class MyAsyncTask extends AsyncTask<String, Void, Bitmap> {
 
-        private WeakReference<PublishActivity> ref;
+        private WeakReference<PublishActivityBak> ref;
         private float maxWidth;
 
-        MyAsyncTask(PublishActivity activity) {
+        MyAsyncTask(PublishActivityBak activity) {
             ref = new WeakReference<>(activity);
             maxWidth = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
                     240, activity.getResources().getDisplayMetrics());
@@ -147,7 +151,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         protected Bitmap doInBackground(String... thumbnailPaths) {
             Bitmap bmp = null;
             if (ref != null) {
-                PublishActivity publishActivity = ref.get();
+                PublishActivityBak publishActivity = ref.get();
                 if (publishActivity != null) {
                     String path = thumbnailPaths[0];
                     if (TextUtils.isEmpty(path)) {
@@ -409,7 +413,7 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         @Override
         public void onError(int errorCode) {
             Log.d(TAG, "fetcher onError " + errorCode);
-            ToastUtils.show(PublishActivity.this, R.string.alivc_editor_cover_fetch_cover_error);
+            ToastUtils.show(PublishActivityBak.this, R.string.alivc_editor_cover_fetch_cover_error);
         }
     };
 
@@ -538,6 +542,9 @@ public class PublishActivity extends Activity implements View.OnClickListener {
     }
 
 
+    private VodImageUploadAuth vodImageUploadAuth = null;
+    private VodVideoUploadAuth vodVideoUploadAuth = null;
+
     /**
      * 上传图片
      */
@@ -546,43 +553,129 @@ public class PublishActivity extends Activity implements View.OnClickListener {
         Log.e(TAG, "startImageUpload");
         RequestParams params = new RequestParams();
         params.addFormDataPart("imageType", "cover");
-        SvOptions.ImageUploadAuthBean imageUploadAuthBean = svOptions.getImageUploadAuth();
-        int rv = mComposeClient.uploadImageWithVod(mThumbnailPath, imageUploadAuthBean.getUploadAddress(), imageUploadAuthBean.getUploadAuth(), mUploadCallback);
-        if (rv < 0) {
-            Log.d(AliyunTag.TAG, "上传参数错误 video path : " + mComposeOutputPath + " thumbnailk : " + mThumbnailPath);
-            ThreadUtils.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showToast(PublishActivity.this, "image 上传错误");
-                    hideUploadProgress();
-                    mPublish.setEnabled(true);
-                }
-            });
-        } else {
-            mIsUpload = true;
-        }
+        HttpRequest.get(AlivcLittleServerApiConstants.URL_GET_IMAGE_UPLOAD_AUTH,
+                params, new StringHttpRequestCallback() {
+                    @Override
+                    protected void onSuccess(String s) {
+                        super.onSuccess(s);
+                        if (!isPublishing) {
+                            Log.w(TAG, "onSuccess: 已取消上传");
+                            return;
+                        }
+                        Log.d(AliyunTag.TAG, s);
+                        vodImageUploadAuth = VodImageUploadAuth.getImageTokenInfo(s);
+                        if (vodImageUploadAuth != null && mComposeClient != null) {
+                            int rv = mComposeClient.uploadImageWithVod(mThumbnailPath, vodImageUploadAuth.getUploadAddress(), vodImageUploadAuth.getUploadAuth(), mUploadCallback);
+                            if (rv < 0) {
+                                Log.d(AliyunTag.TAG, "上传参数错误 video path : " + mComposeOutputPath + " thumbnailk : " + mThumbnailPath);
+                                ThreadUtils.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        ToastUtil.showToast(PublishActivityBak.this, "image 上传错误");
+                                        hideUploadProgress();
+                                        mPublish.setEnabled(true);
+                                    }
+                                });
+                            } else {
+                                mIsUpload = true;
+                            }
+
+                        } else {
+                            ThreadUtils.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    ToastUtil.showToast(PublishActivityBak.this, "image upload auth info 获取错误");
+                                    hideUploadProgress();
+                                    mPublish.setEnabled(true);
+                                }
+                            });
+                            Log.e(AliyunTag.TAG, "Get image upload auth info failed");
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(int errorCode, String msg) {
+                        super.onFailure(errorCode, msg);
+                        if (!isPublishing) {
+                            Log.w(TAG, "onSuccess: 已取消上传");
+                            return;
+                        }
+                        Log.e(AliyunTag.TAG, "Get image upload auth info failed, errorCode:" + errorCode + ", msg:" + msg);
+                        ThreadUtils.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(PublishActivityBak.this, "image upload auth info 获取错误");
+                                hideUploadProgress();
+                                mPublish.setEnabled(true);
+                            }
+                        });
+                    }
+                });
     }
 
     /**
      * 上传视频
      */
     private void startVideoUpload() {
-        SvOptions.VideoUploadAuthBean videoUploadAuthBean = svOptions.getVideoUploadAuth();
-        int rv = mComposeClient.uploadVideoWithVod(mComposeOutputPath, videoUploadAuthBean.getUploadAddress(), videoUploadAuthBean.getUploadAuth(), mUploadCallback);
-        if (rv < 0) {
-            Log.d(AliyunTag.TAG, "上传参数错误 video path : " + mComposeOutputPath + " thumbnailk : " + mThumbnailPath);
-            ThreadUtils.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    ToastUtil.showToast(PublishActivity.this, "video 上传错误");
-                    hideUploadProgress();
-                    mPublish.setEnabled(true);
+        RequestParams params = new RequestParams();
+        params.addFormDataPart("title", "默认描述");
+        params.addFormDataPart("fileName", mComposeFileName);
+        HttpRequest.get(AlivcLittleServerApiConstants.URL_GET_VIDEO_UPLOAD_AUTH, params, new StringHttpRequestCallback() {
+            @Override
+            protected void onSuccess(String s) {
+                super.onSuccess(s);
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
                 }
-            });
-        } else {
-            mIsUpload = true;
-        }
+                vodVideoUploadAuth = VodVideoUploadAuth.getVideoTokenInfo(s);
+                if (vodVideoUploadAuth != null && mComposeClient != null) {
+                    int rv = mComposeClient.uploadVideoWithVod(mComposeOutputPath, vodVideoUploadAuth.getUploadAddress(), vodVideoUploadAuth.getUploadAuth(), mUploadCallback);
+                    if (rv < 0) {
+                        Log.d(AliyunTag.TAG, "上传参数错误 video path : " + mComposeOutputPath + " thumbnailk : " + mThumbnailPath);
+                        ThreadUtils.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(PublishActivityBak.this, "video 上传错误");
+                                hideUploadProgress();
+                                mPublish.setEnabled(true);
+                            }
+                        });
+                    } else {
+                        mIsUpload = true;
+                    }
 
+                } else {
+                    ThreadUtils.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(PublishActivityBak.this, "Get video upload auth failed");
+                            hideUploadProgress();
+                            mPublish.setEnabled(true);
+                        }
+                    });
+                    Log.e(AliyunTag.TAG, "Get video upload auth info failed");
+                }
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+                super.onFailure(errorCode, msg);
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
+                }
+                Log.e(AliyunTag.TAG, "Get video upload auth failed, errorCode:" + errorCode + ", msg:" + msg);
+                ThreadUtils.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ToastUtil.showToast(PublishActivityBak.this, "Get video upload auth failed");
+                        hideUploadProgress();
+                        mPublish.setEnabled(true);
+                    }
+                });
+            }
+        });
     }
 
     private final AliyunVodCompose.AliyunIVodUploadCallBack mUploadCallback = new AliyunVodCompose.AliyunIVodUploadCallBack() {
@@ -601,13 +694,10 @@ public class PublishActivity extends Activity implements View.OnClickListener {
                         startVideoUpload();
                     } else {
                         Intent intent = new Intent();
-                        SvOptions.VideoUploadAuthBean videoUploadAuthBean = svOptions.getVideoUploadAuth();
-                        SvOptions.ImageUploadAuthBean imageUploadAuthBean = svOptions.getImageUploadAuth();
-
-                        intent.putExtra("videoId", videoUploadAuthBean.getVideoId());
-                        intent.putExtra("imageUrl", imageUploadAuthBean.getImageURL());
-                        intent.putExtra("videoDesc", "默认描述");
-                        intent.putExtra("visibility", String.valueOf(findViewById(vRgPublishType.getCheckedRadioButtonId()).getTag()));
+                        intent.putExtra("videoId", vodVideoUploadAuth.getVideoId());
+                        intent.putExtra("imageUrl", vodImageUploadAuth.getImageURL());
+                        intent.putExtra("describe", "默认描述");
+                        intent.putExtra("publishType", String.valueOf(findViewById(vRgPublishType.getCheckedRadioButtonId()).getTag()));
                         setResult(RESULT_OK, intent);
                         hideUploadProgress();
                         if (isQuestionMode) {
@@ -682,9 +772,66 @@ public class PublishActivity extends Activity implements View.OnClickListener {
             if (mComposeClient == null) {
                 return;
             }
-            ToastUtil.showToast(getApplicationContext(), "上传凭证失效，请退出重试");
+            if (mComposeClient.getState() == AliyunIVodCompose.AliyunComposeState.STATE_IMAGE_UPLOADING) {
+                startImageUpload();
+            } else if (mComposeClient.getState() == AliyunIVodCompose.AliyunComposeState.STATE_VIDEO_UPLOADING) {
+                refreshVideoUpload(vodVideoUploadAuth.getVideoId());
+            }
         }
     };
+
+    /**
+     * 刷新视频凭证
+     *
+     * @param videoId
+     */
+    private void refreshVideoUpload(String videoId) {
+
+        RequestParams params = new RequestParams();
+        params.addFormDataPart("videoId", videoId);
+        HttpRequest.get(AlivcLittleServerApiConstants.URL_REFRESH_VIDEO_UPLOAD_AUTH, params, new StringHttpRequestCallback() {
+            @Override
+            protected void onSuccess(String s) {
+                super.onSuccess(s);
+
+                if (!isPublishing) {
+                    Log.w(TAG, "onSuccess: 已取消上传");
+                    return;
+                }
+
+                RefreshVodVideoUploadAuth tokenInfo = RefreshVodVideoUploadAuth.getReVideoTokenInfo(s);
+                if (tokenInfo != null && mComposeClient != null) {
+                    int rv = mComposeClient.refreshWithUploadAuth(tokenInfo.getUploadAuth());
+                    if (rv < 0) {
+                        Log.d(AliyunTag.TAG, "上传参数错误 video path : " + mComposeOutputPath + " thumbnailk : " + mThumbnailPath);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                ToastUtil.showToast(PublishActivityBak.this, "刷新凭证错误");
+                            }
+                        });
+                    } else {
+                        mIsUpload = true;
+                    }
+
+                } else {
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            ToastUtil.showToast(PublishActivityBak.this, "刷新凭证获取错误");
+                        }
+                    });
+                    Log.e(AliyunTag.TAG, "Get video upload auth info failed");
+                }
+
+            }
+
+            @Override
+            public void onFailure(int errorCode, String msg) {
+                super.onFailure(errorCode, msg);
+            }
+        });
+    }
 
 
 }
