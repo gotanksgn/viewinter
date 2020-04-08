@@ -53,7 +53,7 @@ public class AliSvWXModule extends WXSDKEngine.DestroyableModule {
         imageUploadAuthBean.setUploadAuth(imageUploadAuth.getString("uploadAuth"));
 
         SvOptions.VideoUploadAuthBean videoUploadAuthBean = new SvOptions.VideoUploadAuthBean();
-        JSONObject videoUploadAuth = options.getJSONObject("imageUploadAuth");
+        JSONObject videoUploadAuth = options.getJSONObject("videoUploadAuth");
         svOptions.setVideoUploadAuth(videoUploadAuthBean);
         videoUploadAuthBean.setUploadAddress(videoUploadAuth.getString("uploadAddress"));
         videoUploadAuthBean.setUploadAuth(videoUploadAuth.getString("uploadAuth"));
