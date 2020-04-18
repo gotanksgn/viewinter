@@ -4,11 +4,11 @@ android {
     compileSdkVersion externalCompileSdkVersion
     buildToolsVersion externalBuildToolsVersion
     defaultConfig {
-        applicationId "com.jagt.viewinter1"
+        applicationId "com.jagt.viewinter"
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
-        versionCode 70
-        versionName "0.7.0"
+        versionCode 79
+        versionName "0.7.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
@@ -18,7 +18,7 @@ android {
             "plus.unipush.appid" : "YV5OylC9sF8v7ZHzy6Gxl5",
             "plus.unipush.appsecret": "LWuaqyCxeA8pfJ5dpjK7M3",
             "plus.unipush.appkey" : "EwDXoWmS4K6Kk3qXDs4bN4",
-            "apk.applicationId":"com.jagt.viewinter1"
+            "apk.applicationId":"com.jagt.viewinter"
         ]
     }
     buildTypes {

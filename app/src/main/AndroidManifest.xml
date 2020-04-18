@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.jagt.viewinter1">
+    package="com.jagt.viewinter">
 
     <!-- 基座删除的部分权限 -->
     <uses-permission android:name="android.permission.GET_TASKS" />
@@ -101,7 +101,7 @@
 
         <provider
             android:name="io.dcloud.common.util.DCloud_FileProvider"
-            android:authorities="com.jagt.viewinter1.dc.fileprovider"
+            android:authorities="com.jagt.viewinter.dc.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
