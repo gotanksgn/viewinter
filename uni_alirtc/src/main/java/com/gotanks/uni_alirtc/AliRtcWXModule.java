@@ -14,6 +14,7 @@ import com.taobao.weex.bridge.JSCallback;
 
 public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
 
+    public static final int REQ_CODE = 2;
     public static final String TAG = "AliRtcWXModule";
 
     private JSCallback jsCallback;
@@ -34,7 +35,17 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
         RTCAuthInfo rtcAuthInfo = ParserJsonUtils.parserLoginJson(options.getJSONObject("authInfo"));
         videoChatArgs.putSerializable("rtcAuthInfo", rtcAuthInfo);
         VideoChatActivity.launchForResult(activity, videoChatArgs);
+    }
 
+
+    @JSMethod(uiThread = true)
+    public void closeRtc(JSONObject options, JSCallback jsCallback) {
+        this.jsCallback = jsCallback;
+        Activity activity = (Activity) mWXSDKInstance.getContext();
+        JSONObject result = new JSONObject();
+        result.put("finishType", "close");//随便传个参数
+        jsCallback.invoke(result);
+        activity.finishActivity(REQ_CODE);
     }
 
     @Override

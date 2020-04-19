@@ -25,6 +25,7 @@ import com.alivc.rtc.AliRtcEngine;
 import com.alivc.rtc.AliRtcEngineEventListener;
 import com.alivc.rtc.AliRtcEngineNotify;
 import com.alivc.rtc.AliRtcRemoteUserInfo;
+import com.gotanks.uni_alirtc.AliRtcWXModule;
 import com.gotanks.uni_alirtc.R;
 import com.gotanks.uni_alirtc.base.BaseActivity;
 import com.gotanks.uni_alirtc.bean.ChartUserBean;
@@ -109,7 +110,7 @@ public class VideoChatActivity extends BaseActivity implements View.OnClickListe
     public static void launchForResult(Activity activity, Bundle videoChatArgs) {
         Intent intent = new Intent(activity, VideoChatActivity.class);
         intent.putExtras(videoChatArgs);
-        activity.startActivityForResult(intent, 1);
+        activity.startActivityForResult(intent, AliRtcWXModule.REQ_CODE);
     }
 
     @Override
