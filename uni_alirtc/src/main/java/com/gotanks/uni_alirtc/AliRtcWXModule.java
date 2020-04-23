@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.alibaba.fastjson.JSONObject;
+import com.alivc.rtc.AliRtcEngine;
 import com.gotanks.uni_alirtc.activity.VideoChatActivity;
 import com.gotanks.uni_alirtc.bean.RTCAuthInfo;
 import com.gotanks.uni_alirtc.utils.ParserJsonUtils;
@@ -22,6 +23,8 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
     @JSMethod(uiThread = true)
     public void openRtc(JSONObject options, JSCallback jsCallback) {
         this.jsCallback = jsCallback;
+        AliRtcEngine.setH5CompatibleMode(1);
+
         Activity activity = (Activity) mWXSDKInstance.getContext();
         Bundle videoChatArgs = new Bundle();
         //用户名
@@ -40,6 +43,7 @@ public class AliRtcWXModule extends WXSDKEngine.DestroyableModule {
 
     @JSMethod(uiThread = true)
     public void closeRtc(JSONObject options, JSCallback jsCallback) {
+        AliRtcEngine.setH5CompatibleMode(1);
         this.jsCallback = jsCallback;
         Activity activity = (Activity) mWXSDKInstance.getContext();
         JSONObject result = new JSONObject();
