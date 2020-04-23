@@ -7,8 +7,8 @@ android {
         applicationId "com.jagt.viewinter"
         minSdkVersion externalMinSdkVersion
         targetSdkVersion externalTargetSdkVersion
-        versionCode 79
-        versionName "0.7.9"
+        versionCode 85
+        versionName "0.8.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
         ndk {
