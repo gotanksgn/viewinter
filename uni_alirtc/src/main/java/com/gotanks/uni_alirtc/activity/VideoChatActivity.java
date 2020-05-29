@@ -258,6 +258,28 @@ public class VideoChatActivity extends BaseActivity implements View.OnClickListe
         }
     }
 
+    private boolean isPause = false;
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        isPause = true;
+        if (mAliRtcEngine != null) {
+            mAliRtcEngine.stopPreview();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (isPause) {
+            isPause = false;
+            if (mAliRtcEngine != null) {
+                mAliRtcEngine.startPreview();
+            }
+        }
+    }
+
     private void joinChannel() {
         if (mAliRtcEngine == null) {
             return;
